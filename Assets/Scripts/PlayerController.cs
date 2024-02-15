@@ -6,7 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public GameObject LookAt;
     private Animator animator;
     private CharacterController characterController;
     private Vector3 lastMousePosition;
@@ -34,9 +33,6 @@ public class PlayerController : MonoBehaviour
         Vector3 right = new Vector3(camTransform.right.x, .0f, camTransform.right.z).normalized;
         Vector3 relativeInput = forward * inputVector.y + right * inputVector.x;
         
-        
-        hMovementSpeed = WalkSpeed;
-            
         if (inputVector.sqrMagnitude > .0f)
         {
             float angle = Mathf.Atan2(relativeInput.x, relativeInput.z) * Mathf.Rad2Deg;
@@ -49,16 +45,8 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsWalking", false);
         }
 
-        Vector3 newSpeed = Vector3.Lerp(velocity, relativeInput * hMovementSpeed, Friction);
+        Vector3 newSpeed = Vector3.Lerp(velocity, relativeInput * WalkSpeed, Friction);
         velocity = new Vector3(newSpeed.x, -9.81f, newSpeed.z);
-        
-        
         characterController.Move(velocity * Time.deltaTime);
-        // mouseDelta = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * (Time.deltaTime * 48.0f);
-        // transform.Rotate(Vector3.up, mouseDelta.x);
-        //
-        // LookAt.transform.Translate(Vector3.up * mouseDelta.y);
-        // LookAt.transform.localPosition =
-        //     new Vector3(.0f, Mathf.Clamp(LookAt.transform.localPosition.y, -2.0f, 2.0f), LookAt.transform.localPosition.z);
     }
 }
