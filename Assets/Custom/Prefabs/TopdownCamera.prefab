@@ -98,6 +98,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6900822556833392174}
   - component: {fileID: 8322270271283581714}
+  - component: {fileID: 5240330351281430504}
   m_Layer: 0
   m_Name: TopdownCamera
   m_TagString: Untagged
@@ -160,3 +161,17 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 4829371625895967449}
+--- !u!114 &5240330351281430504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2773772530961649252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3799d8d55636b1141881e20d7b4e6fa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundedDeadzoneHeight: 0.1
+  jumpingDeadzoneHeight: 2

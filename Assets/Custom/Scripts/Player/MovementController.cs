@@ -14,7 +14,9 @@ public class MovementController : MonoBehaviour
     private Transform camTransform;
 
     private float hMovementSpeed;
-    public float WalkSpeed, SneakSpeed, Friction;
+    private float jumpGravity, fallGravity, minJumpVelocity, maxJumpVelocity, currentCoyoteTime;
+    public float WalkSpeed, SneakSpeed, Friction, MinJumpHeight, MaxJumpHeight, JumpDuration, FallDuration;
+    public TriggerCheck GroundCheck;
     private Vector3 velocity;
     private static readonly int a_IsWalking = Animator.StringToHash("IsWalking");
     private static readonly int a_IsCrouching = Animator.StringToHash("IsCrouching");
@@ -32,6 +34,23 @@ public class MovementController : MonoBehaviour
         }
     }
     private bool isCrouched;
+    private bool isJumping;
+
+    private bool IsGrounded
+    {
+        get => isGrounded;
+        set
+        {
+            if (isGrounded != value)
+            {
+                EventManager.Invoke(new GroundedChangedEvent(value));
+                Debug.Log(value);
+                isGrounded = value;
+            }
+        }
+    }
+
+    private bool isGrounded;
 
     private void Awake()
     {
@@ -39,6 +58,11 @@ public class MovementController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         camTransform = Camera.main.transform;
         animator = GetComponentInChildren<Animator>();
+        
+        jumpGravity = 2f * MaxJumpHeight / Mathf.Pow(JumpDuration, 2);
+        fallGravity = MaxJumpHeight / Mathf.Pow(FallDuration, 2);
+        minJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MinJumpHeight);
+        maxJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MaxJumpHeight);
     }
 
     private void Update()
@@ -65,9 +89,66 @@ public class MovementController : MonoBehaviour
         {
             IsCrouched = !IsCrouched;
         }
+        HandleGravity();
+        UpdateGrounded();
+        HandleJumping();
 
-        Vector3 newSpeed = Vector3.Lerp(velocity, relativeInput * (IsCrouched ? SneakSpeed : WalkSpeed), Friction);
-        velocity = new Vector3(newSpeed.x, -9.81f, newSpeed.z);
+        Vector3 newSpeed = Vector3.Lerp(new Vector3(velocity.x, .0f, velocity.z), relativeInput * (IsCrouched ? SneakSpeed : WalkSpeed), Friction);
+        velocity = new Vector3(newSpeed.x, velocity.y, newSpeed.z);
         characterController.Move(velocity * Time.deltaTime);
+    }
+    
+    private void HandleGravity()
+    {
+        if (velocity.y >= 0)
+        {
+            velocity = new Vector3(velocity.x, velocity.y - jumpGravity * Time.deltaTime, velocity.z);
+        }
+        else
+        {
+            velocity = new Vector3(velocity.x, velocity.y - fallGravity * Time.deltaTime, velocity.z);
+        }
+    }
+    
+    private void HandleJumping()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && GroundCheck.HasCollision)
+        {
+            velocity = new Vector3(velocity.x, maxJumpVelocity, velocity.z);
+            isJumping = true;
+            return;
+        }
+        
+        if (Input.GetKeyUp(KeyCode.Space) && velocity.y > minJumpVelocity)
+        {
+            velocity = new Vector3(velocity.x, minJumpVelocity, velocity.z);
+        }
+    }
+    
+    private void UpdateGrounded()
+    {
+        if (!GroundCheck.HasCollision)
+        {
+            IsGrounded = false;
+            return;
+        }
+        
+
+        float distance = GroundCheck.GetShortestDistanceFromCenter();
+        if (distance > .0f)
+        {
+            characterController.Move(Vector3.down * distance);
+            if (velocity.y < .0f)
+            {
+                isJumping = false;
+            }
+        }
+
+        if (!isJumping)
+        {
+            velocity = new Vector3(velocity.x, .0f, velocity.z);
+            IsGrounded = true;
+        }
+        
     }
 }
