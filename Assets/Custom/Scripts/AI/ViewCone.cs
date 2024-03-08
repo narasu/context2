@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Written by Sebastian Lague for his Field of View visualisation series
+/// Written by Sebastian Lague for his Field of View visualisation series, minor tweaks by me
 /// https://www.youtube.com/watch?v=rQG9aUWarwE
 /// 
 /// This code was published under the MIT License
 /// https://github.com/SebLague/Field-of-View/
 /// </summary>
+public delegate void TargetFoundEventHandler(TargetFoundEvent _event);
+public delegate void TargetLostEventHandler();
 
-public class FieldOfView : MonoBehaviour
+public class ViewCone : MonoBehaviour
 {
     public float viewRadius;
 	[Range(0,360)]
@@ -19,8 +21,7 @@ public class FieldOfView : MonoBehaviour
 	public LayerMask targetMask;
 	public LayerMask obstacleMask;
 
-	[HideInInspector]
-	public List<Transform> visibleTargets = new List<Transform>();
+	private List<Transform> visibleTargets = new List<Transform>();
 
 	public float meshResolution;
 	public int edgeResolveIterations;
@@ -30,33 +31,25 @@ public class FieldOfView : MonoBehaviour
 
 	public MeshFilter viewMeshFilter;
 	Mesh viewMesh;
-
-
-	public bool HasTarget
-	{
-		get => hasTarget;
-		private set
-		{
-			if (hasTarget != value)
-			{
-				//invoke event
-				hasTarget = value;
-			}
-		}
-	}
+	
+	
+	public event TargetFoundEventHandler OnTargetFound;
+	public event TargetLostEventHandler OnTargetLost;
 
 	private bool hasTarget;
 
-	void Start() {
+	private void Start() {
 		viewMesh = new Mesh ();
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 
 		StartCoroutine ("FindTargetsWithDelay", .2f);
+		
+		
 	}
 
 
-	IEnumerator FindTargetsWithDelay(float delay) {
+	private IEnumerator FindTargetsWithDelay(float delay) {
 		while (true) {
 			yield return new WaitForSeconds (delay);
 			FindVisibleTargets ();
@@ -67,34 +60,38 @@ public class FieldOfView : MonoBehaviour
 		DrawFieldOfView ();
 	}
 
-	void FindVisibleTargets() {
+	private void FindVisibleTargets() {
 		visibleTargets.Clear ();
+		List<Transform> newTargets = new();
 		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
-
+		
+		
 		for (int i = 0; i < targetsInViewRadius.Length; i++) {
 			Transform target = targetsInViewRadius [i].transform;
 			Vector3 dirToTarget = (target.position - transform.position).normalized;
 			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) {
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
 				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask)) {
-					visibleTargets.Add (target);
+					newTargets.Add (target);
 				}
 			}
 		}
 
 		if (visibleTargets.Count > 0 && !hasTarget)
 		{
-			//EventManager.Invoke(new TargetFoundEvent());
-			hasTarget = true;
+			OnTargetFound?.Invoke(new TargetFoundEvent(visibleTargets[0]));
+			//EventManager.Invoke(new TargetFoundEvent(visibleTargets[0]));
 		}
 		else if (visibleTargets.Count == 0 && hasTarget)
 		{
+			OnTargetLost?.Invoke();
 			//EventManager.Invoke(new TargetLostEvent());
-			hasTarget = false;
 		}
+
+		hasTarget = visibleTargets.Count > 0;
 	}
 
-	void DrawFieldOfView() {
+	private void DrawFieldOfView() {
 		int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
 		float stepAngleSize = viewAngle / stepCount;
 		List<Vector3> viewPoints = new List<Vector3> ();
@@ -139,13 +136,16 @@ public class FieldOfView : MonoBehaviour
 
 		viewMesh.Clear ();
 
+		// a hack to make looking around work
+		viewMeshFilter.transform.rotation = transform.rotation;
+		
 		viewMesh.vertices = vertices;
 		viewMesh.triangles = triangles;
 		viewMesh.RecalculateNormals ();
 	}
 
 
-	EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast) {
+	private EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast) {
 		float minAngle = minViewCast.angle;
 		float maxAngle = maxViewCast.angle;
 		Vector3 minPoint = Vector3.zero;
@@ -169,7 +169,7 @@ public class FieldOfView : MonoBehaviour
 	}
 
 
-	ViewCastInfo ViewCast(float globalAngle) {
+	private ViewCastInfo ViewCast(float globalAngle) {
 		Vector3 dir = DirFromAngle (globalAngle, true);
 		RaycastHit hit;
 

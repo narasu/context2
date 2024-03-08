@@ -1,56 +1,84 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class Guard : MonoBehaviour
 {
-    private Animator animator;
-    public GameObject PatrolPathRoot;
-    private Transform[] pathNodes;
+    [SerializeField] private GameObject PatrolNodes;
+    [SerializeField] private Transform ViewTransform;
+    private BTBaseNode tree;
+    
     private NavMeshAgent agent;
-
-    private Transform player;
-    private FieldOfView fov;
-
-    private int currentNode;
-
-    public float WalkSpeed, RunSpeed;
+    private Animator animator;
+    private ViewCone viewCone;
+    private Blackboard blackboard = new();
     
     private void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        pathNodes = PatrolPathRoot.GetComponentsInChildren<Transform>();
-        agent.SetDestination(pathNodes[0].position);
-        player = FindObjectOfType<MovementController>().transform;
-        fov = GetComponent<FieldOfView>();
+        animator = GetComponentInChildren<Animator>();
+        viewCone = GetComponentInChildren<ViewCone>();
+    }
+
+    private void Start()
+    {
+        blackboard.SetVariable(Strings.Agent, agent);
+        blackboard.SetVariable(Strings.Animator, animator);
+        blackboard.SetVariable(Strings.PatrolNodes, PatrolNodes);
+        blackboard.SetVariable(Strings.ViewCone, viewCone);
+        blackboard.SetVariable(Strings.ViewTransform, ViewTransform);
+
+        var moveTo = new BTMoveTo(blackboard);
+
+        var detect = new BTSequence("DetectSequence", false,
+            new BTCacheStatus(blackboard, Strings.DetectionResult, new BTDetect(blackboard)),
+            new BTSetDestinationOnTarget(blackboard));
+        
+        var patrol = new BTParallel("Patrol", Policy.RequireAll, Policy.RequireOne,
+            new BTInvert(new BTGetStatus(blackboard, Strings.DetectionResult)),
+            new BTSequence("path sequence", false,
+                new BTPath(blackboard, moveTo),
+                new BTLookAround(blackboard)
+            )
+        );
+        
+        var chase = new BTSelector("Chase Selector",
+            new BTSequence("Chase", false,
+                moveTo,
+                new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
+        );
+        
+        
+        var detectionSelector = new BTSelector("DetectionSelector",
+            patrol,
+            chase
+        );
+
+        tree = new BTParallel("Tree", Policy.RequireAll, Policy.RequireAll,
+            detect,
+            detectionSelector
+        );
     }
 
     private void FixedUpdate()
     {
-        if (Vector3.Distance(agent.transform.position, agent.destination) <= agent.stoppingDistance)
-        {
-            currentNode++;
-            if (currentNode == pathNodes.Length)
-            {
-                currentNode = 0;
-            }
-        }
+        tree?.Tick();
+    }
 
-        if (!fov.HasTarget)
-        {
-            agent.SetDestination(pathNodes[currentNode].transform.position);
-            agent.speed = WalkSpeed;
-            animator.SetBool("IsRunning", false);
-        }
-        else
-        {
-            agent.SetDestination(player.position);
-            agent.speed = RunSpeed;
-            animator.SetBool("IsRunning", true);
-        }
+    private void OnDestroy()
+    {
+        tree?.OnTerminate();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        // if (other.GetComponent<IPickup>() is { } pickup)
+        // {
+        //     EventManager.Invoke(new WeaponPickedUpEvent(pickup.PickUp()));
+        // }
     }
 }
