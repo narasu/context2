@@ -332,7 +332,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  visibleTargets: []
   meshResolution: 5
   edgeResolveIterations: 4
   edgeDstThreshold: 0.18
@@ -350,9 +349,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c658a8f1790e84eb6e22379c0dc18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatrolPathRoot: {fileID: 1661988625}
-  WalkSpeed: 2
-  RunSpeed: 4
+  PatrolNodes: {fileID: 0}
+  ViewTransform: {fileID: 0}
 --- !u!195 &141843153
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -560,7 +558,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 6825d80bb07289f458d8ae577b710426, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 22c5f860fa1ac964b8734673a1cf959b, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &224318245
 GameObject:
@@ -2274,7 +2272,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  visibleTargets: []
   meshResolution: 5
   edgeResolveIterations: 4
   edgeDstThreshold: 0.18
@@ -2292,9 +2289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c658a8f1790e84eb6e22379c0dc18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatrolPathRoot: {fileID: 561702233}
-  WalkSpeed: 2
-  RunSpeed: 4
+  PatrolNodes: {fileID: 0}
+  ViewTransform: {fileID: 0}
 --- !u!195 &1255459336
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2534,7 +2530,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  visibleTargets: []
   meshResolution: 5
   edgeResolveIterations: 4
   edgeDstThreshold: 0.18
@@ -2552,9 +2547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c658a8f1790e84eb6e22379c0dc18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatrolPathRoot: {fileID: 1245932555}
-  WalkSpeed: 2
-  RunSpeed: 4
+  PatrolNodes: {fileID: 0}
+  ViewTransform: {fileID: 0}
 --- !u!195 &1270226522
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3206,9 +3200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c658a8f1790e84eb6e22379c0dc18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatrolPathRoot: {fileID: 1044137289}
-  WalkSpeed: 2
-  RunSpeed: 4
+  PatrolNodes: {fileID: 0}
+  ViewTransform: {fileID: 0}
 --- !u!195 &1623999262
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3269,7 +3262,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  visibleTargets: []
   meshResolution: 5
   edgeResolveIterations: 4
   edgeDstThreshold: 0.18
@@ -3722,6 +3714,7 @@ GameObject:
   - component: {fileID: 1944242846}
   - component: {fileID: 1944242844}
   - component: {fileID: 1944242845}
+  - component: {fileID: 1944242847}
   m_Layer: 0
   m_Name: ViewCone (1)
   m_TagString: Untagged
@@ -3794,6 +3787,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1255459337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &1944242847
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944242843}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1962757015
 GameObject:
   m_ObjectHideFlags: 0
@@ -3912,6 +3920,79 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1001 &1987923576
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5156311035333332287, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_Name
+      value: Guard (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PatrolNodes
+      value: 
+      objectReference: {fileID: 1044137289}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8a9645ffaa86d3e428a735347af98b2b, type: 3}
 --- !u!1 &1990789057
 GameObject:
   m_ObjectHideFlags: 0
@@ -4423,6 +4504,7 @@ SceneRoots:
   - {fileID: 1255459337}
   - {fileID: 561702234}
   - {fileID: 1623999263}
+  - {fileID: 1987923576}
   - {fileID: 1044137290}
   - {fileID: 141843154}
   - {fileID: 1661988626}
