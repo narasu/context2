@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: SlowBomb
   Prefab: {fileID: 4346793256899385921, guid: ef058503f1d06ec4ebd69823cdcfb85a, type: 3}
-  ThrowForce: 157
+  ThrowForce: 7.6
   SpawnOnImpact: {fileID: 179707940365587259, guid: dd3b3a233b477de44af5242d430670b0,
     type: 3}
   ImpactEffectTime: 5

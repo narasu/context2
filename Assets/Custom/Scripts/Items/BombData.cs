@@ -5,7 +5,7 @@ public class BombData : ScriptableObject
 {
     public string Name;
     public GameObject Prefab;
-    [Range(.0f, 1280.0f)]public float ThrowForce;
+    [Range(.0f, 32.0f)]public float ThrowForce;
     public GameObject SpawnOnImpact;
     public float ImpactEffectTime;
 

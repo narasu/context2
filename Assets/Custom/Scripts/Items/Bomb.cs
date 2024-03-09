@@ -14,7 +14,7 @@ public class Bomb : MonoBehaviour, IThrowable, IImpactor
     
     public void Throw(Vector3 _direction)
     {
-        rb.AddForce(_direction * data.ThrowForce);
+        rb.AddForce(_direction * data.ThrowForce, ForceMode.Impulse);
     }
 
     public void OnImpact(Collision _collision)
