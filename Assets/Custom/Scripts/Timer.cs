@@ -54,5 +54,4 @@ public class Timer
         isStarted = true;
         currentTime = .0f;
     }
-    
 }

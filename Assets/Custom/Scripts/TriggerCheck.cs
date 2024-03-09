@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TriggerCheck : MonoBehaviour
@@ -13,7 +15,12 @@ public class TriggerCheck : MonoBehaviour
         col = GetComponent<Collider>();
         HasCollision = colliders.Count > 0;
     }
-        
+
+    private void FixedUpdate()
+    {
+        RemoveDestroyed();
+    }
+
     private void OnTriggerStay(Collider _other)
     {
         if (colliders.Contains(_other))
@@ -58,6 +65,10 @@ public class TriggerCheck : MonoBehaviour
 
         foreach (Collider t in colliders)
         {
+            if (t.IsDestroyed())
+            {
+                continue;
+            }
             float colliderTop = t.bounds.max.y;
             float diff = transform.position.y - colliderTop;
             if (diff < distance)
@@ -65,13 +76,34 @@ public class TriggerCheck : MonoBehaviour
                 distance = diff;
             }
         }
-
+        
         if (distance < col.bounds.size.y && distance > .0f)
         {
             return distance;
         }
 
         return .0f;
+    }
+
+    private void RemoveDestroyed()
+    {
+        if (colliders.Count == 0)
+        {
+            return;
+        }
+        
+        List<Collider> destroyedList = new();
+        foreach (Collider c in colliders)
+        {
+            if (c.IsDestroyed())
+            {
+                destroyedList.Add(c);
+            }
+        }
+        foreach (Collider c in destroyedList)
+        {
+            colliders.Remove(c);
+        }
     }
 
 }
