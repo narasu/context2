@@ -17,7 +17,7 @@ public class BTDetect : BTBaseNode
     public BTDetect(Blackboard _blackboard) : base("Detect")
     {
         blackboard = _blackboard;
-        viewCone = _blackboard.GetVariable<ViewCone>("ViewCone");
+        viewCone = _blackboard.GetVariable<ViewCone>(Strings.ViewCone);
 
         viewCone.OnTargetFound += OnTargetFound;
         viewCone.OnTargetLost += OnTargetLost;
