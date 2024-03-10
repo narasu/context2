@@ -27,26 +27,26 @@ public class Bomb : MonoBehaviour, IThrowable, IImpactor
             return;
         }
         
-        Vector3 pos = _collision.GetContact(0).point;
-        if (data.SpawnOnImpact != null)
-        {
-            var e = data.SpawnOnImpact.GetComponent<IImpactEffect>();
-            GameObject impact = null;
-            
-            if (e.EffectType == ImpactType.H_SURFACE && _collision.GetContact(0).normal.y != 0)
-            {
-                impact = Instantiate(data.SpawnOnImpact, pos, Quaternion.identity);
-            }
-            else if (e.EffectType == ImpactType.V_SURFACE && _collision.GetContact(0).normal.x != 0)
-            {
-                impact = Instantiate(data.SpawnOnImpact, pos, Quaternion.identity);
-            }
-            
-            if (impact != null)
-            {
-                impact.GetComponent<IImpactEffect>()?.SetEffectTime(data.ImpactEffectTime);
-            }
-        }
+        // Vector3 pos = _collision.GetContact(0).point;
+        // if (data.SpawnOnImpact != null)
+        // {
+        //     var e = data.SpawnOnImpact.GetComponent<IImpactEffect>();
+        //     GameObject impact = null;
+        //     
+        //     if (e.EffectType == ImpactType.H_SURFACE && _collision.GetContact(0).normal.y != 0)
+        //     {
+        //         impact = Instantiate(data.SpawnOnImpact, pos, Quaternion.identity);
+        //     }
+        //     else if (e.EffectType == ImpactType.V_SURFACE && _collision.GetContact(0).normal.x != 0)
+        //     {
+        //         impact = Instantiate(data.SpawnOnImpact, pos, Quaternion.identity);
+        //     }
+        //     
+        //     if (impact != null)
+        //     {
+        //         impact.GetComponent<IImpactEffect>()?.SetEffectTime(data.ImpactEffectTime);
+        //     }
+        // }
         Destroy(gameObject);
     }
     

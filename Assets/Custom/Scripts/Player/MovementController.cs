@@ -17,6 +17,7 @@ public class MovementController : MonoBehaviour
     private float jumpGravity, fallGravity, minJumpVelocity, maxJumpVelocity, currentCoyoteTime;
     public float WalkSpeed, SneakSpeed, Friction, MinJumpHeight, MaxJumpHeight, JumpDuration, FallDuration;
     public TriggerCheck GroundCheck;
+    public CapsuleCollider DetectCollider;
     private Vector3 velocity;
     private static readonly int a_IsWalking = Animator.StringToHash("IsWalking");
     private static readonly int a_IsCrouching = Animator.StringToHash("IsCrouching");
@@ -28,6 +29,16 @@ public class MovementController : MonoBehaviour
         {
             if (isCrouched != value)
             {
+                if (value)
+                {
+                    DetectCollider.height = .8f;
+                    DetectCollider.center = new Vector3(0, 0.4f, 0);
+                }
+                else
+                {
+                    DetectCollider.height = 2.0f;
+                    DetectCollider.center = new Vector3(0, 1.0f, 0);
+                }
                 animator.SetBool(a_IsCrouching, value);
                 isCrouched = value;
             }
@@ -89,7 +100,7 @@ public class MovementController : MonoBehaviour
         }
         HandleGravity();
         UpdateGrounded();
-        HandleJumping();
+        //HandleJumping();
 
         Vector3 newSpeed = Vector3.Lerp(new Vector3(velocity.x, .0f, velocity.z), relativeInput * (IsCrouched ? SneakSpeed : WalkSpeed), Friction);
         velocity = new Vector3(newSpeed.x, velocity.y, newSpeed.z);

@@ -10,4 +10,5 @@
     public static string DetectionResult = "DetectionResult";
     public static string ViewCone = "ViewCone";
     public static string ViewTransform = "ViewTransform";
+    public static string StartingPosition = "StartingPosition";
 }

@@ -61,8 +61,8 @@ MonoBehaviour:
   m_LookaheadTime: 0.85
   m_LookaheadSmoothing: 6
   m_LookaheadIgnoreY: 0
-  m_XDamping: 1
-  m_YDamping: 1
+  m_XDamping: 2
+  m_YDamping: 2
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
@@ -174,4 +174,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundedDeadzoneHeight: 0.1
-  jumpingDeadzoneHeight: 2
+  jumpingDeadzoneHeight: 1

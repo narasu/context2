@@ -28,5 +28,17 @@ public class BTLookAround : BTBaseNode
         }
         return TaskStatus.Running;
     }
+
+    public override void OnExit(TaskStatus _status)
+    {
+        base.OnExit(_status);
+        anim.Stop();
+    }
+
+    public override void OnTerminate()
+    {
+        base.OnTerminate();
+        anim.Stop();
+    }
 }
 

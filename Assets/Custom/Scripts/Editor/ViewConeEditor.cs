@@ -24,9 +24,9 @@ public class ViewConeEditor : Editor {
         Handles.DrawLine (cone.transform.position, cone.transform.position + viewAngleB * cone.viewRadius);
 
         Handles.color = Color.red;
-        // foreach (Transform visibleTarget in fow.visibleTargets) {
-        //     Handles.DrawLine (fow.transform.position, visibleTarget.position);
-        // }
+        foreach (Transform visibleTarget in cone.visibleTargets) {
+            Handles.DrawLine (cone.transform.position, visibleTarget.position);
+        }
     }
 
 }
