@@ -38,13 +38,11 @@ public class MovementController : MonoBehaviour
 
     private bool IsGrounded
     {
-        get => isGrounded;
         set
         {
             if (isGrounded != value)
             {
                 EventManager.Invoke(new GroundedChangedEvent(value));
-                Debug.Log(value);
                 isGrounded = value;
             }
         }
