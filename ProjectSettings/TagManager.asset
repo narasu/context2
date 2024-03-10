@@ -12,11 +12,11 @@ TagManager:
   - Water
   - UI
   - Player
-  - LOSObstacle
   - Projectile
-  - 
-  - 
-  - 
+  - Wall
+  - Ground
+  - Prop
+  - Enemy
   - 
   - 
   - 

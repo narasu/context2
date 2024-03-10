@@ -7,7 +7,7 @@ public class SlowSurface : MonoBehaviour, IImpactEffect
 
     private TriggerCheck triggerCheck;
     private Timer lifetime;
-    
+    public ImpactType EffectType => ImpactType.H_SURFACE;
     public float EffectTime { get; private set; }
     public void SetEffectTime(float _time) => EffectTime = _time;
     

@@ -52,7 +52,7 @@ MonoBehaviour:
     m_Bits: 64
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1792
   meshResolution: 5
   edgeResolveIterations: 4
   edgeDstThreshold: 0.18
@@ -231,7 +231,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PatrolNodes: {fileID: 0}
-  WeaponCrates: []
   ViewTransform: {fileID: 5749490766321226819}
 --- !u!65 &7525914853412363906
 BoxCollider:

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40c5f45aa8445b6824cd18ddc8e5eed, type: 3}
   m_Name: SlowBomb
   m_EditorClassIdentifier: 
-  Name: SlowBomb
+  Name: Bomb01
   Prefab: {fileID: 4346793256899385921, guid: ef058503f1d06ec4ebd69823cdcfb85a, type: 3}
   ThrowForce: 7.6
   SpawnOnImpact: {fileID: 179707940365587259, guid: dd3b3a233b477de44af5242d430670b0,

@@ -1,6 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// Trajectory draw code by Unity3D School
+/// https://www.youtube.com/watch?v=K4DMCseZA08
+/// </summary>
+
 [RequireComponent(typeof(LineRenderer))]
 public class ThrowHandler : MonoBehaviour
 {
@@ -37,6 +42,8 @@ public class ThrowHandler : MonoBehaviour
             DrawTrajectory();
         }
     }
+    
+    
     
     void DrawTrajectory()
     {
