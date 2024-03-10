@@ -40,6 +40,7 @@ public class Guard : MonoBehaviour
         var patrol = new BTParallel("Patrol", Policy.RequireAll, Policy.RequireOne,
             new BTInvert(new BTGetStatus(blackboard, Strings.DetectionResult)),
             new BTSequence("path sequence", false,
+                new BTSetSpeed(blackboard, 2.0f),
                 new BTPath(blackboard, moveTo),
                 new BTLookAround(blackboard)
             )
@@ -47,6 +48,7 @@ public class Guard : MonoBehaviour
         
         var chase = new BTSelector("Chase Selector",
             new BTSequence("Chase", false,
+                new BTSetSpeed(blackboard, 4.0f),
                 moveTo,
                 new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
         );

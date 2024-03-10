@@ -62,7 +62,7 @@ public class ViewCone : MonoBehaviour
 
 	private void FindVisibleTargets() {
 		visibleTargets.Clear ();
-		List<Transform> newTargets = new();
+		//List<Transform> newTargets = new();
 		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
 		
 		
@@ -72,7 +72,7 @@ public class ViewCone : MonoBehaviour
 			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) {
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
 				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask)) {
-					newTargets.Add (target);
+					visibleTargets.Add (target);
 				}
 			}
 		}
