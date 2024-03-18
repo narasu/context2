@@ -12,15 +12,14 @@ public class GuardEditor : Editor
     private Guard guard;
     private SerializedProperty pathNodesList;
     private int selectedNode;
-    private int newNodeIndex = -1;
-    
-    private Dictionary<SerializedProperty, int> pathControls = new();
+    private int selectedNodeIndex = -1;
 
     private void OnEnable()
     {
         guard = (Guard)target;
         pathNodesList = serializedObject.FindProperty("PathNodes");
     }
+    
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -47,7 +46,7 @@ public class GuardEditor : Editor
         
         if (GUILayout.Button(buttonString))
         {
-            newNodeIndex = pathNodesList.arraySize;
+            selectedNodeIndex = pathNodesList.arraySize;
             Vector3 initPos;
             Quaternion initRot;
 
@@ -63,20 +62,19 @@ public class GuardEditor : Editor
                 Vector3 p = pn.FindPropertyRelative("Position").vector3Value;
                 Quaternion r = pn.FindPropertyRelative("Rotation").quaternionValue;
                 
-                initPos = p + r * Vector3.forward;
+                initPos = p + r * (Vector3.forward * 2.0f);
                 initRot = r;
-                
             }
 
             pathNodesList.InsertArrayElementAtIndex(pathNodesList.arraySize);
             SerializedProperty n = pathNodesList.GetArrayElementAtIndex(pathNodesList.arraySize - 1);
             n.FindPropertyRelative("Position").vector3Value = initPos;
             n.FindPropertyRelative("Rotation").quaternionValue = initRot;
-            newNodeIndex = -1;
         }
 
-        serializedObject.ApplyModifiedProperties();
         Utility.RefreshSceneView();
+        serializedObject.ApplyModifiedProperties();
+        
     }
 
     private void OnSceneGUI()
@@ -89,10 +87,6 @@ public class GuardEditor : Editor
         
         Vector3 guardPos = guard.transform.position;
 
-        if (newNodeIndex >= 0)
-        {
-            
-        }
         
         for(int i=0; i< pathNodesList.arraySize; i++)
         {
@@ -108,8 +102,9 @@ public class GuardEditor : Editor
             Handles.SphereHandleCap(controlID, pos, rot, .25f, EventType.Repaint);
             
             // if node is selected, draw transform gizmo
-            if (selectedNode == controlID)
+            if (selectedNodeIndex == i)
             {
+                selectedNode = controlID;
                 EnableTransformHandles(pathNode, pos, rot);
             }
             // otherwise, just draw a line indicating its forward direction
@@ -133,16 +128,24 @@ public class GuardEditor : Editor
                     {
                         if (selectedNode != controlID)
                         {
-                            Debug.Log("Gizmo selected!");
                             GUIUtility.hotControl = controlID;
                             selectedNode = controlID;
+                            selectedNodeIndex = i;
                             evt.Use();
                         }
                     }
                     break;
+                case EventType.ExecuteCommand:
+                    if (evt.commandName == "FrameSelected" && selectedNode == controlID)
+                    {
+                        SceneView.lastActiveSceneView.Frame(new Bounds(pos, Vector3.one * 2.0f), false);
+                        evt.Use();
+                    }
+
+                    break;
             }
-            serializedObject.ApplyModifiedProperties();
         }
+        serializedObject.ApplyModifiedProperties();
     }
 
     private void DrawNode(SerializedProperty _pathNode)
