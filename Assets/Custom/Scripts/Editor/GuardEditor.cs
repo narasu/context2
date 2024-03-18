@@ -72,8 +72,8 @@ public class GuardEditor : Editor
 
             if (pathNodesList.arraySize == 0)
             {
-                initRot = guard.transform.rotation;
-                initPos = initRot * Vector3.forward * 2.0f;
+                initRot =  Quaternion.identity;
+                initPos = Vector3.forward * 2.0f;
             }
             else
             {
@@ -113,9 +113,10 @@ public class GuardEditor : Editor
             SerializedProperty pathNode = pathNodesList.GetArrayElementAtIndex(i);
             
             // get position and rotation to draw node at
-            Vector3 pos = guardPos + pathNode.FindPropertyRelative("Position").vector3Value;
+            Vector3 pos = guardPos + (guard.transform.rotation * pathNode.FindPropertyRelative("Position").vector3Value);
             Quaternion rot = pathNode.FindPropertyRelative("Rotation").quaternionValue;
-
+            Vector3 sumEuler = guard.transform.rotation.eulerAngles + rot.eulerAngles;
+            rot = Quaternion.Euler(sumEuler);
             // draw node
             Handles.color = selectedNodeIndex == i ? Color.green : Color.blue;
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -186,9 +187,12 @@ public class GuardEditor : Editor
         Vector3 guardPos = guard.transform.position;
         
         _pos = Handles.PositionHandle(_pos, _rot);
-        _pathNode.FindPropertyRelative("Position").vector3Value = _pos - guardPos;
+        _pathNode.FindPropertyRelative("Position").vector3Value = Quaternion.Inverse(guard.transform.rotation) * (_pos - guardPos);
                 
         _rot = Handles.RotationHandle(_rot, _pos);
+        
+        Vector3 diffEuler = _rot.eulerAngles - guard.transform.rotation.eulerAngles;
+        _rot = Quaternion.Euler(diffEuler);
         _pathNode.FindPropertyRelative("Rotation").quaternionValue = _rot;
     }
 }
