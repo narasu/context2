@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +9,7 @@ public class Guard : MonoBehaviour
 {
     [SerializeField] private GameObject PatrolNodes;
     [SerializeField] private Transform ViewTransform;
+    public List<PathNode> PathNodes;
     private BTBaseNode tree;
     
     private NavMeshAgent agent;
@@ -73,14 +74,5 @@ public class Guard : MonoBehaviour
     private void OnDestroy()
     {
         tree?.OnTerminate();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        
-        // if (other.GetComponent<IPickup>() is { } pickup)
-        // {
-        //     EventManager.Invoke(new WeaponPickedUpEvent(pickup.PickUp()));
-        // }
     }
 }

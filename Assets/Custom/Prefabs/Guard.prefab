@@ -167,8 +167,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2630478097290998483}
-  - component: {fileID: 3633117786919980967}
   - component: {fileID: 7098954659651671055}
+  - component: {fileID: 3633117786919980967}
   - component: {fileID: 7525914853412363906}
   - component: {fileID: 5404291889323946037}
   m_Layer: 0
@@ -197,6 +197,21 @@ Transform:
   - {fileID: 5749490766321226819}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7098954659651671055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5156311035333332287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c658a8f1790e84eb6e22379c0dc18b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PatrolNodes: {fileID: 0}
+  ViewTransform: {fileID: 5749490766321226819}
+  PathNodes: []
 --- !u!195 &3633117786919980967
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -219,20 +234,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7098954659651671055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5156311035333332287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c658a8f1790e84eb6e22379c0dc18b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PatrolNodes: {fileID: 0}
-  ViewTransform: {fileID: 5749490766321226819}
 --- !u!65 &7525914853412363906
 BoxCollider:
   m_ObjectHideFlags: 0
