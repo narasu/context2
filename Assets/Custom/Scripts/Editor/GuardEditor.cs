@@ -14,10 +14,13 @@ public class GuardEditor : Editor
     private int selectedNode;
     private int selectedNodeIndex = -1;
 
+    private GUIStyle removeButton;
+
     private void OnEnable()
     {
         guard = (Guard)target;
         pathNodesList = serializedObject.FindProperty("PathNodes");
+
     }
     
     public override void OnInspectorGUI()
@@ -25,11 +28,28 @@ public class GuardEditor : Editor
         serializedObject.Update();
         for(int i=0; i< pathNodesList.arraySize; i++)
         {
+            using (new GUILayout.VerticalScope())
+            {
+                if (GUILayout.Button("Node " + i, EditorStyles.boldLabel))
+                {
+                    selectedNodeIndex = i;
+                }
+
+                var pn = pathNodesList.GetArrayElementAtIndex(i);
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    float waitTime = pn.FindPropertyRelative("WaitTime").floatValue;
+                    GUILayout.Label("Wait Time: " + waitTime, GUILayout.Width(80));
+                    waitTime = GUILayout.HorizontalSlider(waitTime, 0.0f, 10.0f);
+                    pn.FindPropertyRelative("WaitTime").floatValue = waitTime;
+                }
+            }
+
             using (new GUILayout.HorizontalScope())
             {
-                GUILayout.Label("Node " + i);
-                
-                if (GUILayout.Button("Remove"))
+                EditorGUILayout.Space(40.0f, true);
+                if (GUILayout.Button("Remove", EditorStyles.miniButton, GUILayout.Width(60)))
                 {
                     pathNodesList.DeleteArrayElementAtIndex(i);
                     Utility.RefreshSceneView();
@@ -50,7 +70,7 @@ public class GuardEditor : Editor
             Vector3 initPos;
             Quaternion initRot;
 
-            if (guard.PathNodes.Count == 0)
+            if (pathNodesList.arraySize == 0)
             {
                 initRot = guard.transform.rotation;
                 initPos = initRot * Vector3.forward * 2.0f;
@@ -97,7 +117,7 @@ public class GuardEditor : Editor
             Quaternion rot = pathNode.FindPropertyRelative("Rotation").quaternionValue;
 
             // draw node
-            Handles.color = Color.blue;
+            Handles.color = selectedNodeIndex == i ? Color.green : Color.blue;
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             Handles.SphereHandleCap(controlID, pos, rot, .25f, EventType.Repaint);
             
