@@ -28,11 +28,13 @@ public class GuardEditor : Editor
         serializedObject.Update();
         for(int i=0; i< pathNodesList.arraySize; i++)
         {
+            EditorGUILayout.Separator();
             using (new GUILayout.VerticalScope())
             {
-                if (GUILayout.Button("Node " + i, EditorStyles.boldLabel))
+                if (GUILayout.Button("Node " + i, GUILayout.Width(60)))
                 {
                     selectedNodeIndex = i;
+                    SceneView.lastActiveSceneView.Frame(new Bounds(guard.transform.position + guard.transform.rotation * pathNodesList.GetArrayElementAtIndex(i).FindPropertyRelative("Position").vector3Value, Vector3.one * 5.0f), false);
                 }
 
                 var pn = pathNodesList.GetArrayElementAtIndex(i);
@@ -40,7 +42,7 @@ public class GuardEditor : Editor
                 using (new GUILayout.HorizontalScope())
                 {
                     float waitTime = pn.FindPropertyRelative("WaitTime").floatValue;
-                    GUILayout.Label("Wait Time: " + waitTime, GUILayout.Width(80));
+                    GUILayout.Label("Wait Time: " + waitTime, GUILayout.Width(90));
                     waitTime = GUILayout.HorizontalSlider(waitTime, 0.0f, 10.0f);
                     pn.FindPropertyRelative("WaitTime").floatValue = waitTime;
                 }
@@ -48,7 +50,7 @@ public class GuardEditor : Editor
 
             using (new GUILayout.HorizontalScope())
             {
-                EditorGUILayout.Space(40.0f, true);
+                EditorGUILayout.Space(.0f, true);
                 if (GUILayout.Button("Remove", EditorStyles.miniButton, GUILayout.Width(60)))
                 {
                     pathNodesList.DeleteArrayElementAtIndex(i);
@@ -56,8 +58,10 @@ public class GuardEditor : Editor
                     break;
                 }
             }
+            EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
         }
-
+        EditorGUILayout.Separator();
         string buttonString = "Add Node";
         if (pathNodesList.arraySize == 0)
         {
@@ -159,7 +163,7 @@ public class GuardEditor : Editor
                 case EventType.ExecuteCommand:
                     if (evt.commandName == "FrameSelected" && selectedNode == controlID)
                     {
-                        SceneView.lastActiveSceneView.Frame(new Bounds(pos, Vector3.one * 2.0f), false);
+                        SceneView.lastActiveSceneView.Frame(new Bounds(pos, Vector3.one * 5.0f), false);
                         evt.Use();
                     }
 
