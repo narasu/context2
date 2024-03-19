@@ -5,21 +5,21 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
-
-public GameObject firstscreen;
-    
-
-
-
 public class ClickEnDisepear : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public GameObject firstScreen;
+    public GameObject secondScreen;
+    public GameObject thirthScreen;
+    private int switched = 0;
+
     void Start()
     {
-        
+        secondScreen.SetActive(false);
+        thirthScreen.SetActive(false);
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         ButtonChek();
@@ -28,15 +28,25 @@ public class ClickEnDisepear : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            firstscreen.gameObject.SetActive(false);
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (switched == 0)
             {
-                this.gameObject.SetActive(false);
-
-
+                firstScreen.SetActive(false);
+                secondScreen.SetActive(true);
             }
 
+
+            if (switched == 1)
+            {
+                secondScreen.SetActive(false);
+                thirthScreen.SetActive(true);
+            }
+            if (switched == 2)
+            {
+                thirthScreen.SetActive(false);
+                switched = 0;
+            }
+            switched++;
         }
-            
     }
-}
+    }
+
