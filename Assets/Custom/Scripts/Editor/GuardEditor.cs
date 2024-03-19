@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -26,6 +27,18 @@ public class GuardEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        if (pathNodesList.arraySize > 0)
+        {
+            EditorGUILayout.Separator();
+            if (GUILayout.Button("Root (Guard Transform)"))
+            {
+                selectedNodeIndex = -1;
+                selectedNode = 0;
+                SceneView.lastActiveSceneView.Frame(new Bounds(guard.transform.position, Vector3.one * 5.0f), false);
+            }
+            EditorGUILayout.Separator();
+            
+        }
         for(int i=0; i< pathNodesList.arraySize; i++)
         {
             EditorGUILayout.Separator();
@@ -34,7 +47,11 @@ public class GuardEditor : Editor
                 if (GUILayout.Button("Node " + i, GUILayout.Width(60)))
                 {
                     selectedNodeIndex = i;
-                    SceneView.lastActiveSceneView.Frame(new Bounds(guard.transform.position + guard.transform.rotation * pathNodesList.GetArrayElementAtIndex(i).FindPropertyRelative("Position").vector3Value, Vector3.one * 5.0f), false);
+                    
+                    Vector3 nodeGlobalPosition = guard.transform.position + guard.transform.rotation *
+                        pathNodesList.GetArrayElementAtIndex(i).FindPropertyRelative("Position").vector3Value;
+                    
+                    SceneView.lastActiveSceneView.Frame(new Bounds(nodeGlobalPosition, Vector3.one * 5.0f), false);
                 }
 
                 var pn = pathNodesList.GetArrayElementAtIndex(i);
@@ -110,16 +127,20 @@ public class GuardEditor : Editor
         }
         
         Vector3 guardPos = guard.transform.position;
+        Quaternion guardRot = guard.transform.rotation;
 
+        Handles.color = Color.white;
+        Handles.SphereHandleCap(0, guardPos, guardRot, .25f, EventType.Repaint);
+        
         
         for(int i=0; i< pathNodesList.arraySize; i++)
         {
             SerializedProperty pathNode = pathNodesList.GetArrayElementAtIndex(i);
             
             // get position and rotation to draw node at
-            Vector3 pos = guardPos + (guard.transform.rotation * pathNode.FindPropertyRelative("Position").vector3Value);
+            Vector3 pos = guardPos + guardRot * pathNode.FindPropertyRelative("Position").vector3Value;
             Quaternion rot = pathNode.FindPropertyRelative("Rotation").quaternionValue;
-            Vector3 sumEuler = guard.transform.rotation.eulerAngles + rot.eulerAngles;
+            Vector3 sumEuler = guardRot.eulerAngles + rot.eulerAngles;
             rot = Quaternion.Euler(sumEuler);
             // draw node
             Handles.color = selectedNodeIndex == i ? Color.green : Color.blue;
@@ -135,7 +156,11 @@ public class GuardEditor : Editor
             // otherwise, just draw a line indicating its forward direction
             else
             {
-                Handles.DrawAAPolyLine(4.0f, pos + Vector3.up * 0.1f, pos + rot * Vector3.forward * 0.5f + Vector3.up * 0.1f);
+                float thickness = 4.0f;
+                Vector3 startPoint = pos + Vector3.up * 0.1f;
+                Vector3 endPoint = pos + rot * Vector3.forward * 0.5f + Vector3.up * 0.1f;
+
+                Handles.DrawAAPolyLine(thickness, startPoint, endPoint);
             }
 
             var evt = Event.current;
