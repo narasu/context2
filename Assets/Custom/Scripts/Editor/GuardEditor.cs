@@ -12,6 +12,10 @@ public class GuardEditor : Editor
     
     private Guard guard;
     private SerializedProperty pathNodesList;
+    private SerializedProperty viewTransform;
+    private SerializedProperty patrolSpeed;
+    private SerializedProperty chaseSpeed;
+    
     private int selectedNode;
     private int selectedNodeIndex = -1;
 
@@ -21,15 +25,22 @@ public class GuardEditor : Editor
     {
         guard = (Guard)target;
         pathNodesList = serializedObject.FindProperty("PathNodes");
-
+        viewTransform = serializedObject.FindProperty("ViewTransform");
+        patrolSpeed = serializedObject.FindProperty("PatrolSpeed");
+        chaseSpeed = serializedObject.FindProperty("ChaseSpeed");
     }
     
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        
+        //GUILayout.Label("", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(viewTransform);
+        
         if (pathNodesList.arraySize > 0)
         {
             EditorGUILayout.Separator();
+            GUILayout.Label("Path Nodes", EditorStyles.boldLabel);
             if (GUILayout.Button("Root (Guard Transform)"))
             {
                 selectedNodeIndex = -1;
