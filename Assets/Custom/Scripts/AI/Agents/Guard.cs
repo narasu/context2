@@ -5,10 +5,12 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum PathType { LOOP, BACK_AND_FORTH }
 public class Guard : MonoBehaviour
 {
     public Transform ViewTransform;
     public List<PathNode> PathNodes;
+    public PathType PathBehaviour;
     public float PatrolSpeed, ChaseSpeed;
     private BTBaseNode tree;
     

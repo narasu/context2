@@ -12,6 +12,7 @@ public class GuardEditor : Editor
     
     private Guard guard;
     private SerializedProperty pathNodesList;
+    private SerializedProperty pathBehaviour;
     private SerializedProperty viewTransform;
     private SerializedProperty patrolSpeed;
     private SerializedProperty chaseSpeed;
@@ -27,6 +28,7 @@ public class GuardEditor : Editor
     {
         guard = (Guard)target;
         pathNodesList = serializedObject.FindProperty("PathNodes");
+        pathBehaviour = serializedObject.FindProperty("PathBehaviour");
         viewTransform = serializedObject.FindProperty("ViewTransform");
         patrolSpeed = serializedObject.FindProperty("PatrolSpeed");
         chaseSpeed = serializedObject.FindProperty("ChaseSpeed");
@@ -45,7 +47,8 @@ public class GuardEditor : Editor
         if (pathNodesList.arraySize > 0)
         {
             EditorGUILayout.Separator();
-            GUILayout.Label("Path Nodes", EditorStyles.boldLabel);
+            GUILayout.Label("Path Settings", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(pathBehaviour);
             if (GUILayout.Button("Root (Guard Transform)"))
             {
                 selectedNodeIndex = -1;
