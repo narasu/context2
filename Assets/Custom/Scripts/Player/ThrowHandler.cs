@@ -26,22 +26,11 @@ public class ThrowHandler : MonoBehaviour
 
     private void Update()
     {
-        // if (Input.GetMouseButtonDown(0))
-        // {
-        //     lineRenderer.enabled = true;
-        // }
-        //
-        // if (Input.GetMouseButtonUp(0))
-        // {
-        //     lineRenderer.enabled = false;
-        //     GameObject bomb = Instantiate(BombDataAsset.Prefab, transform.position, Quaternion.identity);
-        //     Bomb b = bomb.GetComponent<Bomb>();
-        //     b.Initialize(BombDataAsset);
-        //     b.Throw(transform.forward);
-        // }
+        
 
         if (lineRenderer.enabled)
         {
+            
             DrawTrajectory();
         }
     }
@@ -65,6 +54,7 @@ public class ThrowHandler : MonoBehaviour
     private void OnThrow(InputAction.CallbackContext context)
     {
         lineRenderer.enabled = true;
+        EventManager.Invoke(new ThrowStartEvent());
     }
 
     private void OnThrowReleased(InputAction.CallbackContext context)
@@ -74,6 +64,7 @@ public class ThrowHandler : MonoBehaviour
         Bomb b = bomb.GetComponent<Bomb>();
         b.Initialize(BombDataAsset);
         b.Throw(transform.forward);
+        EventManager.Invoke(new ThrowEndEvent());
     }
     void DrawTrajectory()
     {

@@ -10,6 +10,7 @@ public class TopdownCameraExtension : CinemachineExtension
 {
     private bool wasMoving;
     private bool isPlayerGrounded;
+    private bool isPlayerThrowing;
 
     private CinemachineVirtualCamera vc;
     private CinemachineComposer c;
@@ -22,6 +23,8 @@ public class TopdownCameraExtension : CinemachineExtension
     private float rotationVelocity;
 
     private Action<GroundedChangedEvent> groundedChangedEventHandler;
+    private Action<ThrowStartEvent> throwStartEventHandler;
+    private Action<ThrowEndEvent> throwEndEventHandler;
 
     private GameInputActions inputActions;
 
@@ -29,7 +32,10 @@ public class TopdownCameraExtension : CinemachineExtension
     {
         base.Awake();
         groundedChangedEventHandler = _event => isPlayerGrounded = _event.IsGrounded;
-        EventManager.Subscribe(typeof(GroundedChangedEvent), groundedChangedEventHandler);
+        throwStartEventHandler = _ => isPlayerThrowing = true;
+        throwEndEventHandler = _ => isPlayerThrowing = false;
+        
+        
         vc = GetComponent<CinemachineVirtualCamera>();
         c = vc.GetCinemachineComponent<CinemachineComposer>();
         ft = vc.GetCinemachineComponent<CinemachineFramingTransposer>();
@@ -45,13 +51,13 @@ public class TopdownCameraExtension : CinemachineExtension
 
     private void Update()
     {
-        if (!Application.isPlaying)
+        if (!Application.isPlaying || isPlayerThrowing)
         {
             return;
         }
 
-        Vector2 mouseInput = inputActions.Player.mkb_Look.ReadValue<Vector2>() * (Time.deltaTime * 5.0f);
-        Vector2 gamepadInput = inputActions.Player.gp_Look.ReadValue<Vector2>();
+        Vector2 mouseInput = inputActions.Player.mkb_Aim.ReadValue<Vector2>() * (Time.deltaTime * 5.0f);
+        Vector2 gamepadInput = inputActions.Player.gp_Aim.ReadValue<Vector2>();
 
         rotationVelocity = Mathf.Lerp(rotationVelocity, (gamepadInput.magnitude + mouseInput.magnitude) * rotationSpeed, 0.99f * Time.deltaTime);
         
@@ -73,12 +79,6 @@ public class TopdownCameraExtension : CinemachineExtension
 
     }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        EventManager.Unsubscribe(typeof(GroundedChangedEvent), groundedChangedEventHandler);
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -91,6 +91,16 @@ public class TopdownCameraExtension : CinemachineExtension
         {
             Debug.LogError("No input manager found!");
         }
+        EventManager.Subscribe(typeof(GroundedChangedEvent), groundedChangedEventHandler);
+        EventManager.Subscribe(typeof(ThrowStartEvent), throwStartEventHandler);
+        EventManager.Subscribe(typeof(ThrowEndEvent), throwEndEventHandler);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.Unsubscribe(typeof(GroundedChangedEvent), groundedChangedEventHandler);
+        EventManager.Unsubscribe(typeof(ThrowStartEvent), throwStartEventHandler);
+        EventManager.Unsubscribe(typeof(ThrowEndEvent), throwEndEventHandler);
     }
 
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase _vcam, CinemachineCore.Stage _stage, ref CameraState _state, float _deltaTime)

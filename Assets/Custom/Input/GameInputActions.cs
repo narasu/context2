@@ -64,7 +64,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""gp_Look"",
+                    ""name"": ""gp_Aim"",
                     ""type"": ""Value"",
                     ""id"": ""952f2555-3e92-40c2-ad40-6070d82bfbec"",
                     ""expectedControlType"": ""Vector2"",
@@ -73,7 +73,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""mkb_Look"",
+                    ""name"": ""mkb_Aim"",
                     ""type"": ""Value"",
                     ""id"": ""1e1c98d6-6f96-4af4-b1c2-393abd35d802"",
                     ""expectedControlType"": ""Vector2"",
@@ -222,7 +222,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""gp_Look"",
+                    ""action"": ""gp_Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -233,7 +233,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""MouseKeyboard"",
-                    ""action"": ""mkb_Look"",
+                    ""action"": ""mkb_Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -276,8 +276,8 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
-        m_Player_gp_Look = m_Player.FindAction("gp_Look", throwIfNotFound: true);
-        m_Player_mkb_Look = m_Player.FindAction("mkb_Look", throwIfNotFound: true);
+        m_Player_gp_Aim = m_Player.FindAction("gp_Aim", throwIfNotFound: true);
+        m_Player_mkb_Aim = m_Player.FindAction("mkb_Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -343,8 +343,8 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Throw;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Crouch;
-    private readonly InputAction m_Player_gp_Look;
-    private readonly InputAction m_Player_mkb_Look;
+    private readonly InputAction m_Player_gp_Aim;
+    private readonly InputAction m_Player_mkb_Aim;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -353,8 +353,8 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
-        public InputAction @gp_Look => m_Wrapper.m_Player_gp_Look;
-        public InputAction @mkb_Look => m_Wrapper.m_Player_mkb_Look;
+        public InputAction @gp_Aim => m_Wrapper.m_Player_gp_Aim;
+        public InputAction @mkb_Aim => m_Wrapper.m_Player_mkb_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -376,12 +376,12 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
-            @gp_Look.started += instance.OnGp_Look;
-            @gp_Look.performed += instance.OnGp_Look;
-            @gp_Look.canceled += instance.OnGp_Look;
-            @mkb_Look.started += instance.OnMkb_Look;
-            @mkb_Look.performed += instance.OnMkb_Look;
-            @mkb_Look.canceled += instance.OnMkb_Look;
+            @gp_Aim.started += instance.OnGp_Aim;
+            @gp_Aim.performed += instance.OnGp_Aim;
+            @gp_Aim.canceled += instance.OnGp_Aim;
+            @mkb_Aim.started += instance.OnMkb_Aim;
+            @mkb_Aim.performed += instance.OnMkb_Aim;
+            @mkb_Aim.canceled += instance.OnMkb_Aim;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -398,12 +398,12 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
-            @gp_Look.started -= instance.OnGp_Look;
-            @gp_Look.performed -= instance.OnGp_Look;
-            @gp_Look.canceled -= instance.OnGp_Look;
-            @mkb_Look.started -= instance.OnMkb_Look;
-            @mkb_Look.performed -= instance.OnMkb_Look;
-            @mkb_Look.canceled -= instance.OnMkb_Look;
+            @gp_Aim.started -= instance.OnGp_Aim;
+            @gp_Aim.performed -= instance.OnGp_Aim;
+            @gp_Aim.canceled -= instance.OnGp_Aim;
+            @mkb_Aim.started -= instance.OnMkb_Aim;
+            @mkb_Aim.performed -= instance.OnMkb_Aim;
+            @mkb_Aim.canceled -= instance.OnMkb_Aim;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -445,7 +445,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         void OnThrow(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
-        void OnGp_Look(InputAction.CallbackContext context);
-        void OnMkb_Look(InputAction.CallbackContext context);
+        void OnGp_Aim(InputAction.CallbackContext context);
+        void OnMkb_Aim(InputAction.CallbackContext context);
     }
 }
