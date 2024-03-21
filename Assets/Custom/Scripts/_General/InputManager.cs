@@ -3,19 +3,16 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public GameInputActions InputActions => inputActions;
     private GameInputActions inputActions;
     private void Awake()
     {
         inputActions = new GameInputActions();
-        ServiceLocator.Provide(Strings.InputAsset, inputActions);
-    }
-
-    private void OnEnable()
-    {
         inputActions.Enable();
+        ServiceLocator.Provide(Strings.InputManager, this);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         inputActions.Disable();
     }

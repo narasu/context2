@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Trajectory draw code by Unity3D School
@@ -15,6 +16,8 @@ public class ThrowHandler : MonoBehaviour
     [Header("Trajectory Display")]
     public int linePoints = 175;
     public float timeIntervalInPoints = 0.01f;
+    
+    private GameInputActions inputActions;
 
     private void Awake()
     {
@@ -23,28 +26,55 @@ public class ThrowHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            lineRenderer.enabled = true;
-        }
-        
-        if (Input.GetMouseButtonUp(0))
-        {
-            lineRenderer.enabled = false;
-            GameObject bomb = Instantiate(BombDataAsset.Prefab, transform.position, Quaternion.identity);
-            Bomb b = bomb.GetComponent<Bomb>();
-            b.Initialize(BombDataAsset);
-            b.Throw(transform.forward);
-        }
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     lineRenderer.enabled = true;
+        // }
+        //
+        // if (Input.GetMouseButtonUp(0))
+        // {
+        //     lineRenderer.enabled = false;
+        //     GameObject bomb = Instantiate(BombDataAsset.Prefab, transform.position, Quaternion.identity);
+        //     Bomb b = bomb.GetComponent<Bomb>();
+        //     b.Initialize(BombDataAsset);
+        //     b.Throw(transform.forward);
+        // }
 
         if (lineRenderer.enabled)
         {
             DrawTrajectory();
         }
     }
+
+    private void OnEnable()
+    {
+        if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
+        {
+            var inputManager = manager as InputManager;
+            inputActions = inputManager.InputActions;
+        }
+        else
+        {
+            Debug.LogError("No input manager found!");
+        }
+        
+        inputActions.Player.Throw.performed += OnThrow;
+        inputActions.Player.Throw.canceled += OnThrowReleased;
+    }
     
-    
-    
+    private void OnThrow(InputAction.CallbackContext context)
+    {
+        lineRenderer.enabled = true;
+    }
+
+    private void OnThrowReleased(InputAction.CallbackContext context)
+    {
+        lineRenderer.enabled = false;
+        GameObject bomb = Instantiate(BombDataAsset.Prefab, transform.position, Quaternion.identity);
+        Bomb b = bomb.GetComponent<Bomb>();
+        b.Initialize(BombDataAsset);
+        b.Throw(transform.forward);
+    }
     void DrawTrajectory()
     {
         Vector3 origin = transform.position;

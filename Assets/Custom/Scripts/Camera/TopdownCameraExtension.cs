@@ -33,7 +33,6 @@ public class TopdownCameraExtension : CinemachineExtension
         vc = GetComponent<CinemachineVirtualCamera>();
         c = vc.GetCinemachineComponent<CinemachineComposer>();
         ft = vc.GetCinemachineComponent<CinemachineFramingTransposer>();
-        inputActions = new GameInputActions();
     }
 
     private void Start()
@@ -50,16 +49,25 @@ public class TopdownCameraExtension : CinemachineExtension
         {
             return;
         }
-        Vector2 rotateInput = inputActions.Player.Look.ReadValue<Vector2>();
 
-        rotationVelocity = Mathf.Lerp(rotationVelocity, rotateInput.magnitude * rotationSpeed, 0.99f * Time.deltaTime);
+        Vector2 mouseInput = inputActions.Player.mkb_Look.ReadValue<Vector2>() * (Time.deltaTime * 5.0f);
+        Vector2 gamepadInput = inputActions.Player.gp_Look.ReadValue<Vector2>();
+
+        rotationVelocity = Mathf.Lerp(rotationVelocity, (gamepadInput.magnitude + mouseInput.magnitude) * rotationSpeed, 0.99f * Time.deltaTime);
         
         // Rotate the camera around its target based on input values
-        if (Mathf.Abs(rotateInput.x) > 0.1f || Mathf.Abs(rotateInput.y) > 0.1f)
+        if (Mathf.Abs(gamepadInput.x) > 0.1f || Mathf.Abs(gamepadInput.y) > 0.1f)
         {
             Vector3 targetPosition = vc.Follow.position;
             
-            transform.RotateAround(targetPosition, Vector3.up, rotateInput.x * rotationVelocity * Time.deltaTime);
+            transform.RotateAround(targetPosition, Vector3.up, gamepadInput.x * rotationVelocity * Time.deltaTime);
+            //transform.RotateAround(targetPosition, transform.right, -rotateInput.y * rotationVelocity * Time.deltaTime);
+        }
+        if (Mathf.Abs(mouseInput.x) > 0.1f || Mathf.Abs(mouseInput.y) > 0.1f)
+        {
+            Vector3 targetPosition = vc.Follow.position;
+            
+            transform.RotateAround(targetPosition, Vector3.up, mouseInput.x * rotationVelocity * Time.deltaTime);
             //transform.RotateAround(targetPosition, transform.right, -rotateInput.y * rotationVelocity * Time.deltaTime);
         }
 
@@ -74,12 +82,15 @@ public class TopdownCameraExtension : CinemachineExtension
     protected override void OnEnable()
     {
         base.OnEnable();
-        inputActions.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Disable();
+        if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
+        {
+            var inputManager = manager as InputManager;
+            inputActions = inputManager.InputActions;
+        }
+        else
+        {
+            Debug.LogError("No input manager found!");
+        }
     }
 
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase _vcam, CinemachineCore.Stage _stage, ref CameraState _state, float _deltaTime)

@@ -12,4 +12,5 @@
     public static string ViewTransform = "ViewTransform";
     public static string StartingPosition = "StartingPosition";
     public static string InputAsset = "InputAsset";
+    public static string InputManager = "InputManager";
 }
