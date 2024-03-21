@@ -9,6 +9,7 @@ public class Destructible : MonoBehaviour, IDamageable
     public void TakeDamage()
     {
         OnTakeDamage?.Invoke();
+        ScoreManager.Instance.MachineCounter--;
         Destroy(gameObject);
     }
 }
