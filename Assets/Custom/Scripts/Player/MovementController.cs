@@ -66,6 +66,7 @@ public class MovementController : MonoBehaviour
 
     private void Awake()
     {
+        ServiceLocator.Provide(Strings.Player, transform);
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         camTransform = Camera.main.transform;
