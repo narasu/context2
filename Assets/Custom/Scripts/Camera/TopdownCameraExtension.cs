@@ -39,6 +39,7 @@ public class TopdownCameraExtension : CinemachineExtension
         vc = GetComponent<CinemachineVirtualCamera>();
         c = vc.GetCinemachineComponent<CinemachineComposer>();
         ft = vc.GetCinemachineComponent<CinemachineFramingTransposer>();
+        inputActions = new GameInputActions();
     }
 
     private void Start()
@@ -82,15 +83,17 @@ public class TopdownCameraExtension : CinemachineExtension
     protected override void OnEnable()
     {
         base.OnEnable();
-        if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
-        {
-            var inputManager = manager as InputManager;
-            inputActions = inputManager.InputActions;
-        }
-        else
-        {
-            Debug.LogError("No input manager found!");
-        }
+        // if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
+        // {
+        //     var inputManager = manager as InputManager;
+        //     inputActions = inputManager.InputActions;
+        // }
+        // else
+        // {
+        //     Debug.LogError("No input manager found!");
+        // }
+        inputActions.Enable();
+        
         EventManager.Subscribe(typeof(GroundedChangedEvent), groundedChangedEventHandler);
         EventManager.Subscribe(typeof(ThrowStartEvent), throwStartEventHandler);
         EventManager.Subscribe(typeof(ThrowEndEvent), throwEndEventHandler);
@@ -98,6 +101,7 @@ public class TopdownCameraExtension : CinemachineExtension
 
     private void OnDisable()
     {
+        inputActions.Disable();
         EventManager.Unsubscribe(typeof(GroundedChangedEvent), groundedChangedEventHandler);
         EventManager.Unsubscribe(typeof(ThrowStartEvent), throwStartEventHandler);
         EventManager.Unsubscribe(typeof(ThrowEndEvent), throwEndEventHandler);

@@ -117,16 +117,16 @@ public class MovementController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
-        {
-            var inputManager = manager as InputManager;
-            inputActions = inputManager.InputActions;
-        }
-        else
-        {
-            Debug.LogError("No input manager found!");
-        }
-        
+        // if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
+        // {
+        //     var inputManager = manager as InputManager;
+        //     inputActions = inputManager.InputActions;
+        // }
+        // else
+        // {
+        //     Debug.LogError("No input manager found!");
+        // }
+        inputActions.Enable();
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpRelease;
         inputActions.Player.Crouch.performed += OnCrouch;
@@ -134,6 +134,7 @@ public class MovementController : MonoBehaviour
 
     private void OnDisable()
     {
+        inputActions.Disable();
         inputActions.Player.Jump.performed -= OnJump;
         inputActions.Player.Jump.canceled -= OnJumpRelease;
         inputActions.Player.Crouch.performed -= OnCrouch;

@@ -22,6 +22,8 @@ public class ThrowHandler : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        inputActions = new GameInputActions();
+        
     }
 
     private void Update()
@@ -37,20 +39,29 @@ public class ThrowHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
-        {
-            var inputManager = manager as InputManager;
-            inputActions = inputManager.InputActions;
-        }
-        else
-        {
-            Debug.LogError("No input manager found!");
-        }
-        
+        // if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
+        // {
+        //     var inputManager = manager as InputManager;
+        //     inputActions = inputManager.InputActions;
+        // }
+        // else
+        // {
+        //     Debug.LogError("No input manager found!");
+        // }
+
+        inputActions.Enable();
         inputActions.Player.Throw.performed += OnThrow;
         inputActions.Player.Throw.canceled += OnThrowReleased;
     }
-    
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
+        
+        inputActions.Player.Throw.performed -= OnThrow;
+        inputActions.Player.Throw.canceled -= OnThrowReleased;
+    }
+
     private void OnThrow(InputAction.CallbackContext context)
     {
         lineRenderer.enabled = true;
