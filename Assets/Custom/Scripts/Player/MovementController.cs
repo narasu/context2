@@ -63,6 +63,9 @@ public class MovementController : MonoBehaviour
     }
     private bool isGrounded;
     private bool isJumping;
+    private bool isThrowing;
+    private Action<ThrowStartEvent> throwStartEventHandler;
+    private Action<ThrowEndEvent> throwEndEventHandler;
 
     private void Awake()
     {
@@ -77,18 +80,21 @@ public class MovementController : MonoBehaviour
         minJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MinJumpHeight);
         maxJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MaxJumpHeight);
         inputActions = new GameInputActions();
+        
+        throwStartEventHandler = _ => isThrowing = true;
+        throwEndEventHandler = _ => isThrowing = false;
     }
     
     private void Update()
     {
-        if (inputActions == null)
-        {
-            if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
-            {
-                inputActions = asset as GameInputActions;
-            }
-            return;
-        }
+        // if (inputActions == null)
+        // {
+        //     if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
+        //     {
+        //         inputActions = asset as GameInputActions;
+        //     }
+        //     return;
+        // }
         Vector2 inputVector = inputActions.Player.Walk.ReadValue<Vector2>();
         
         Vector3 forward = new Vector3(camTransform.forward.x, .0f, camTransform.forward.z).normalized;
@@ -130,6 +136,9 @@ public class MovementController : MonoBehaviour
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpRelease;
         inputActions.Player.Crouch.performed += OnCrouch;
+        
+        EventManager.Subscribe(typeof(ThrowStartEvent), throwStartEventHandler);
+        EventManager.Subscribe(typeof(ThrowEndEvent), throwEndEventHandler);
     }
 
     private void OnDisable()
@@ -138,10 +147,11 @@ public class MovementController : MonoBehaviour
         inputActions.Player.Jump.performed -= OnJump;
         inputActions.Player.Jump.canceled -= OnJumpRelease;
         inputActions.Player.Crouch.performed -= OnCrouch;
+        
+        EventManager.Unsubscribe(typeof(ThrowStartEvent), throwStartEventHandler);
+        EventManager.Unsubscribe(typeof(ThrowEndEvent), throwEndEventHandler);
     }
     
-    
-
     #region MOVEMENT_FUNCTIONS
     private void HandleGravity()
     {
