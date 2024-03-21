@@ -2,25 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class MovementController : MonoBehaviour
 {
-    private Animator animator;
-    private CharacterController characterController;
-    private Vector3 lastMousePosition;
-    private Vector3 mouseDelta;
-
-    private Transform camTransform;
-
-    private float hMovementSpeed;
-    private float jumpGravity, fallGravity, minJumpVelocity, maxJumpVelocity, currentCoyoteTime;
+    
     public float WalkSpeed, SneakSpeed, Friction, MinJumpHeight, MaxJumpHeight, JumpDuration, FallDuration;
     public TriggerCheck GroundCheck;
     public CapsuleCollider DetectCollider;
-    private Vector3 velocity;
+    
+    private Animator animator;
     private static readonly int a_IsWalking = Animator.StringToHash("IsWalking");
     private static readonly int a_IsCrouching = Animator.StringToHash("IsCrouching");
+    
+    private Vector3 lastMousePosition;
+    private Vector3 mouseDelta;
+    private GameInputActions inputActions;
+    
+    private CharacterController characterController;
+    private Transform camTransform;
+    private float hMovementSpeed;
+    private float jumpGravity, fallGravity, minJumpVelocity, maxJumpVelocity, currentCoyoteTime;
+    private Vector3 velocity;
 
     private bool IsCrouched
     {
@@ -45,7 +49,6 @@ public class MovementController : MonoBehaviour
         }
     }
     private bool isCrouched;
-    private bool isJumping;
 
     private bool IsGrounded
     {
@@ -58,8 +61,8 @@ public class MovementController : MonoBehaviour
             }
         }
     }
-
     private bool isGrounded;
+    private bool isJumping;
 
     private void Awake()
     {
@@ -73,10 +76,11 @@ public class MovementController : MonoBehaviour
         minJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MinJumpHeight);
         maxJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MaxJumpHeight);
     }
-
+    
     private void Update()
     {
-        Vector2 inputVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        Vector2 inputVector = inputActions.Player.Walk.ReadValue<Vector2>();
+        Debug.Log(inputVector);
         
         Vector3 forward = new Vector3(camTransform.forward.x, .0f, camTransform.forward.z).normalized;
         Vector3 right = new Vector3(camTransform.right.x, .0f, camTransform.right.z).normalized;
@@ -93,20 +97,36 @@ public class MovementController : MonoBehaviour
         {
             animator.SetBool(a_IsWalking, false);
         }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            IsCrouched = !IsCrouched;
-        }
+        
         HandleGravity();
         UpdateGrounded();
-        //HandleJumping();
 
         Vector3 newSpeed = Vector3.Lerp(new Vector3(velocity.x, .0f, velocity.z), relativeInput * (IsCrouched ? SneakSpeed : WalkSpeed), Friction);
         velocity = new Vector3(newSpeed.x, velocity.y, newSpeed.z);
         characterController.Move(velocity * Time.deltaTime);
     }
+
+    private void OnEnable()
+    {
+        if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
+        {
+            inputActions = asset as GameInputActions;
+        }
+        inputActions.Player.Jump.performed += OnJump;
+        inputActions.Player.Jump.canceled += OnJumpRelease;
+        inputActions.Player.Crouch.performed += OnCrouch;
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Player.Jump.performed -= OnJump;
+        inputActions.Player.Jump.canceled -= OnJumpRelease;
+        inputActions.Player.Crouch.performed -= OnCrouch;
+    }
     
+    
+
+    #region MOVEMENT_FUNCTIONS
     private void HandleGravity()
     {
         if (velocity.y >= 0)
@@ -119,16 +139,23 @@ public class MovementController : MonoBehaviour
         }
     }
     
-    private void HandleJumping()
+    private void OnCrouch(InputAction.CallbackContext _ctx)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && GroundCheck.HasCollision)
+        IsCrouched = !IsCrouched;
+    }
+
+    private void OnJump(InputAction.CallbackContext _ctx)
+    {
+        if (GroundCheck.HasCollision)
         {
             velocity = new Vector3(velocity.x, maxJumpVelocity, velocity.z);
             isJumping = true;
-            return;
         }
-        
-        if (Input.GetKeyUp(KeyCode.Space) && velocity.y > minJumpVelocity)
+    }
+
+    private void OnJumpRelease(InputAction.CallbackContext _ctx)
+    {
+        if (velocity.y > minJumpVelocity)
         {
             velocity = new Vector3(velocity.x, minJumpVelocity, velocity.z);
         }
@@ -160,4 +187,5 @@ public class MovementController : MonoBehaviour
         }
         
     }
+    #endregion
 }

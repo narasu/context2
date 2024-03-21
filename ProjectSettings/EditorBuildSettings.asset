@@ -14,4 +14,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Custom/Scenes/Jodi_BlockOut.unity
     guid: 89063326868b7234d99c01a50f814c8c
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: a749d6d792b25ae4fb81968e1d23421c,
+      type: 2}

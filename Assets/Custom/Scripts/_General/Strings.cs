@@ -11,4 +11,5 @@
     public static string ViewCone = "ViewCone";
     public static string ViewTransform = "ViewTransform";
     public static string StartingPosition = "StartingPosition";
+    public static string InputAsset = "InputAsset";
 }
