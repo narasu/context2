@@ -1,33 +1,27 @@
-﻿/// <summary>
-/// This decorator node takes the result of its condition node
-/// and executes one of two child nodes based on the result.
+﻿using System;
+
+/// <summary>
+/// This decorator node runs its child only if a condition is met
 /// </summary>
 
-public class BTCondition : BTBaseNode
+public class BTCondition : BTDecorator
 {
-    private readonly BTBaseNode condition;
-    private readonly BTBaseNode onSuccess;
-    private readonly BTBaseNode onFailure;
+    private bool condition;
+    private readonly BTBaseNode onTrue;
+    private TaskStatus onFalse;
 
-    public BTCondition(BTBaseNode _condition, BTBaseNode _onSuccess, BTBaseNode _onFailure) : base("condition")
+    public BTCondition(bool _condition, BTBaseNode _onTrue, TaskStatus _onFalse) : base("condition", _onTrue)
     {
         condition = _condition;
-        onSuccess = _onSuccess;
-        onFailure = _onFailure;
+        onTrue = _onTrue;
+        onFalse = _onFalse;
     }
 
     protected override TaskStatus Run()
     {
-        TaskStatus conditionStatus = condition.Tick();
 
-        switch (conditionStatus)
-        {
-            case TaskStatus.Success:
-                return onSuccess.Tick();
-            case TaskStatus.Failed:
-                return onFailure.Tick();
-        }
+        TaskStatus status = condition ? onTrue.Tick() : onFalse;
 
-        return conditionStatus;
+        return status;
     }
 }
