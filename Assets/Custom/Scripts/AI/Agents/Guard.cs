@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,7 +11,9 @@ public class Guard : MonoBehaviour
 {
     public Transform ViewTransform;
     public List<PathNode> PathNodes;
+    private PathNode[] patrolNodes;
     public PathType PathBehaviour;
+    private bool hasPath = false;
     public float PatrolSpeed, ChaseSpeed;
     private BTBaseNode tree;
     
@@ -24,33 +27,36 @@ public class Guard : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         viewCone = GetComponentInChildren<ViewCone>();
+        InitializePath();
     }
 
     private void Start()
     {
         blackboard.SetVariable(Strings.Agent, agent);
         blackboard.SetVariable(Strings.Animator, animator);
-        blackboard.SetVariable(Strings.PatrolNodes, PathNodes);
+        blackboard.SetVariable(Strings.PatrolNodes, patrolNodes);
         blackboard.SetVariable(Strings.ViewCone, viewCone);
         blackboard.SetVariable(Strings.ViewTransform, ViewTransform);
 
         var moveTo = new BTMoveTo(blackboard);
 
-        var detect = new BTSequence("DetectSequence", false,
+        var detect = new BTSequence("DetectSequence",
             new BTCacheStatus(blackboard, Strings.DetectionResult, new BTDetect(blackboard)),
             new BTSetDestinationOnTarget(blackboard));
         
         var patrol = new BTParallel("Patrol", Policy.RequireAll, Policy.RequireOne,
             new BTInvert(new BTGetStatus(blackboard, Strings.DetectionResult)),
-            new BTSequence("path sequence", false,
+            new BTSequence("path sequence",
                 new BTSetSpeed(blackboard, 2.0f),
                 new BTPath(blackboard, moveTo),
                 new BTLookAround(blackboard)
             )
         );
+
+        var path = new BTSequence("Path", true, patrolNodes.Length, moveTo);
         
         var chase = new BTSelector("Chase Selector",
-            new BTSequence("Chase", false,
+            new BTSequence("Chase",
                 new BTSetSpeed(blackboard, 4.0f),
                 moveTo,
                 new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
@@ -76,5 +82,29 @@ public class Guard : MonoBehaviour
     private void OnDestroy()
     {
         tree?.OnTerminate();
+    }
+
+    private void InitializePath()
+    {
+        if (PathNodes.Count == 0)
+        {
+            return;
+        }
+
+        hasPath = true;
+        
+        // convert path node positions to global
+        patrolNodes = PathNodes.ToArray();
+        for (int i = 0; i < patrolNodes.Length; i++)
+        {
+            patrolNodes[i].Position = transform.position + transform.rotation * patrolNodes[i].Position;
+            
+            Vector3 sumRotation = patrolNodes[i].Rotation.eulerAngles + transform.rotation.eulerAngles;
+            patrolNodes[i].Rotation = Quaternion.Euler(sumRotation);
+        }
+
+        // add starting position as node
+        IEnumerable<PathNode> result = patrolNodes.Prepend(new PathNode(transform.position, transform.rotation));
+        patrolNodes = result.ToArray();
     }
 }
