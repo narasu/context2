@@ -76,12 +76,20 @@ public class MovementController : MonoBehaviour
         fallGravity = MaxJumpHeight / Mathf.Pow(FallDuration, 2);
         minJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MinJumpHeight);
         maxJumpVelocity = Mathf.Sqrt(2 * jumpGravity * MaxJumpHeight);
+        inputActions = new GameInputActions();
     }
     
     private void Update()
     {
+        if (inputActions == null)
+        {
+            if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
+            {
+                inputActions = asset as GameInputActions;
+            }
+            return;
+        }
         Vector2 inputVector = inputActions.Player.Walk.ReadValue<Vector2>();
-        Debug.Log(inputVector);
         
         Vector3 forward = new Vector3(camTransform.forward.x, .0f, camTransform.forward.z).normalized;
         Vector3 right = new Vector3(camTransform.right.x, .0f, camTransform.right.z).normalized;
@@ -109,10 +117,8 @@ public class MovementController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
-        {
-            inputActions = asset as GameInputActions;
-        }
+        inputActions.Enable();
+        
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpRelease;
         inputActions.Player.Crouch.performed += OnCrouch;
@@ -120,6 +126,7 @@ public class MovementController : MonoBehaviour
 
     private void OnDisable()
     {
+        inputActions.Disable();
         inputActions.Player.Jump.performed -= OnJump;
         inputActions.Player.Jump.canceled -= OnJumpRelease;
         inputActions.Player.Crouch.performed -= OnCrouch;

@@ -33,6 +33,7 @@ public class TopdownCameraExtension : CinemachineExtension
         vc = GetComponent<CinemachineVirtualCamera>();
         c = vc.GetCinemachineComponent<CinemachineComposer>();
         ft = vc.GetCinemachineComponent<CinemachineFramingTransposer>();
+        inputActions = new GameInputActions();
     }
 
     private void Start()
@@ -73,16 +74,12 @@ public class TopdownCameraExtension : CinemachineExtension
     protected override void OnEnable()
     {
         base.OnEnable();
-        
-        if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
-        {
-            inputActions = asset as GameInputActions;
-        }
+        inputActions.Enable();
     }
 
     private void OnDisable()
     {
-        
+        inputActions.Disable();
     }
 
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase _vcam, CinemachineCore.Stage _stage, ref CameraState _state, float _deltaTime)
