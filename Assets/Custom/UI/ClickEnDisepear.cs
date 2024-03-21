@@ -11,12 +11,14 @@ public class ClickEnDisepear : MonoBehaviour
     public GameObject firstScreen;
     public GameObject secondScreen;
     public GameObject thirthScreen;
+    public GameObject forthScreen;
     private int switched = 0;
 
     void Start()
     {
         secondScreen.SetActive(false);
         thirthScreen.SetActive(false);
+        forthScreen.SetActive(false);
     }
 
 
@@ -33,8 +35,6 @@ public class ClickEnDisepear : MonoBehaviour
                 firstScreen.SetActive(false);
                 secondScreen.SetActive(true);
             }
-
-
             if (switched == 1)
             {
                 secondScreen.SetActive(false);
@@ -43,7 +43,11 @@ public class ClickEnDisepear : MonoBehaviour
             if (switched == 2)
             {
                 thirthScreen.SetActive(false);
-                switched = 0;
+                forthScreen.SetActive(true);
+            }
+            if (switched == 3)
+            {
+                forthScreen.SetActive(false);
             }
             switched++;
         }
