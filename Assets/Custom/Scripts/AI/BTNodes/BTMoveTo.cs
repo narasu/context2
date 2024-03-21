@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
@@ -23,6 +24,7 @@ public class BTMoveTo : BTBaseNode
     protected override TaskStatus Run()
     {
         agent.SetDestination(blackboard.GetVariable<Vector3>(Strings.Destination));
+        
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             return TaskStatus.Failed;
@@ -35,5 +37,7 @@ public class BTMoveTo : BTBaseNode
         
         return TaskStatus.Running;
     }
+    
+    
 
 }

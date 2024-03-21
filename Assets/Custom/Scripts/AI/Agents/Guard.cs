@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum PathType { LOOP, BACK_AND_FORTH }
 public class Guard : MonoBehaviour
 {
-    [SerializeField] private GameObject PatrolNodes;
-    [SerializeField] private Transform ViewTransform;
+    public Transform ViewTransform;
+    public List<PathNode> PathNodes;
+    public PathType PathBehaviour;
+    public float PatrolSpeed, ChaseSpeed;
     private BTBaseNode tree;
     
     private NavMeshAgent agent;
@@ -27,7 +30,7 @@ public class Guard : MonoBehaviour
     {
         blackboard.SetVariable(Strings.Agent, agent);
         blackboard.SetVariable(Strings.Animator, animator);
-        blackboard.SetVariable(Strings.PatrolNodes, PatrolNodes);
+        blackboard.SetVariable(Strings.PatrolNodes, PathNodes);
         blackboard.SetVariable(Strings.ViewCone, viewCone);
         blackboard.SetVariable(Strings.ViewTransform, ViewTransform);
 
@@ -73,14 +76,5 @@ public class Guard : MonoBehaviour
     private void OnDestroy()
     {
         tree?.OnTerminate();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        
-        // if (other.GetComponent<IPickup>() is { } pickup)
-        // {
-        //     EventManager.Invoke(new WeaponPickedUpEvent(pickup.PickUp()));
-        // }
     }
 }
