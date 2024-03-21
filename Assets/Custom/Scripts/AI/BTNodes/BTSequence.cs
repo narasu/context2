@@ -5,12 +5,25 @@ using UnityEngine;
 public class BTSequence : BTComposite
 {
     private readonly bool keepPosition;
-    
+    private readonly int repeatCount;
     private int currentIndex;
 
+    
+    public BTSequence(string _name, params BTBaseNode[] _children) : base(_name, _children)
+    {
+        name = _name;
+    }
+    
     public BTSequence(string _name, bool _keepPosition, params BTBaseNode[] _children) : base(_name, _children)
     {
         keepPosition = _keepPosition;
+        name = _name;
+    }
+    
+    public BTSequence(string _name, bool _keepPosition, int _repeatCount, params BTBaseNode[] _children) : base(_name, _children)
+    {
+        keepPosition = _keepPosition;
+        repeatCount = _repeatCount;
         name = _name;
     }
 

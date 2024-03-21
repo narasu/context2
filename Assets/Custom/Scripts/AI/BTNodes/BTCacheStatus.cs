@@ -17,6 +17,7 @@ public class BTCacheStatus : BTDecorator
     {
         TaskStatus childStatus = child.Tick();
         blackboard.SetVariable<TaskStatus>(statusString, childStatus);
+        
         return childStatus;
     }
 }
