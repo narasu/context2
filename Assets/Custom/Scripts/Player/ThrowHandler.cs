@@ -112,7 +112,7 @@ public class ThrowHandler : MonoBehaviour
     private Vector3 GetWorldAimDelta()
     {
         Transform camTransform = Camera.main.transform;
-        Vector2 gpDelta = inputActions.Player.gp_Aim.ReadValue<Vector2>();
+        Vector2 gpDelta = inputActions.Player.gp_Aim.ReadValue<Vector2>() * (Time.deltaTime * 4.0f);
         Vector2 mouseDelta = inputActions.Player.mkb_Aim.ReadValue<Vector2>() * (Time.deltaTime * 5.0f);
 
         Vector2 combinedInput = gpDelta + mouseDelta;

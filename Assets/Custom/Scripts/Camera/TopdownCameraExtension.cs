@@ -57,7 +57,7 @@ public class TopdownCameraExtension : CinemachineExtension
             return;
         }
 
-        Vector2 mouseInput = inputActions.Player.mkb_Aim.ReadValue<Vector2>() * (Time.deltaTime * 5.0f);
+        Vector2 mouseInput = inputActions.Player.mkb_Aim.ReadValue<Vector2>() * 0.1f;
         Vector2 gamepadInput = inputActions.Player.gp_Aim.ReadValue<Vector2>();
 
         rotationVelocity = Mathf.Lerp(rotationVelocity, (gamepadInput.magnitude + mouseInput.magnitude) * rotationSpeed, 0.99f * Time.deltaTime);
