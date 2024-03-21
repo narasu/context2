@@ -12,7 +12,7 @@ public class ThrowHandler : MonoBehaviour
     public BombData BombDataAsset;
     private LineRenderer lineRenderer;
     
-    [Header("****Trajectory Display****")]
+    [Header("Trajectory Display")]
     public int linePoints = 175;
     public float timeIntervalInPoints = 0.01f;
 
