@@ -11,6 +11,7 @@ using UnityEngine.InputSystem;
 public class ThrowHandler : MonoBehaviour
 {
     public BombData BombDataAsset;
+    public GameObject LandingDisc;
     private LineRenderer lineRenderer;
     
     [Header("Trajectory Display")]
@@ -19,35 +20,38 @@ public class ThrowHandler : MonoBehaviour
     
     private GameInputActions inputActions;
     private Vector3 landingPosition;
+    private Vector3 launchVelocity;
 
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         inputActions = new GameInputActions();
+        //LandingDisc.transform.SetParent(null);
     }
-
     private void Update()
     {
         
 
         if (lineRenderer.enabled)
         {
-            DrawTrajectory();
+            landingPosition += GetWorldAimDelta();
+            landingPosition = Vector3.ClampMagnitude(landingPosition, 5.0f);
+            Vector3 actualPosition = landingPosition + transform.position;
+            Debug.DrawLine(actualPosition, actualPosition + Vector3.up * 2.0f, Color.green);
+            float initialVelocity = CalculateInitialVelocity(actualPosition);
+            float gravity = Physics.gravity.y;
+            float timeOfFlight = 2 * initialVelocity / gravity;
+            float maxHeight = initialVelocity * initialVelocity / (2 * -gravity);
+            float horizontalRange = initialVelocity * timeOfFlight;
+
+            // Update the bomb's rigidbody with the calculated trajectory
+            launchVelocity = CalculateLaunchVelocity(actualPosition, timeOfFlight);
+            DrawTrajectory(launchVelocity);
         }
     }
 
     private void OnEnable()
     {
-        // if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
-        // {
-        //     var inputManager = manager as InputManager;
-        //     inputActions = inputManager.InputActions;
-        // }
-        // else
-        // {
-        //     Debug.LogError("No input manager found!");
-        // }
-
         inputActions.Enable();
         inputActions.Player.Throw.performed += OnThrow;
         inputActions.Player.Throw.canceled += OnThrowReleased;
@@ -63,68 +67,69 @@ public class ThrowHandler : MonoBehaviour
 
     private void OnThrow(InputAction.CallbackContext context)
     {
-        landingPosition = transform.position + transform.forward * 2.0f;
+        landingPosition = transform.forward * 2.0f;
+        Debug.Log(landingPosition);
+        LandingDisc.SetActive(true);
+        
         lineRenderer.enabled = true;
         EventManager.Invoke(new ThrowStartEvent());
     }
 
     private void OnThrowReleased(InputAction.CallbackContext context)
     {
-        GameObject bomb = Instantiate(BombDataAsset.Prefab, transform.position, Quaternion.identity);
-        float initialVelocity = CalculateInitialVelocity(landingPosition);
-        float mass = bomb.GetComponent<Rigidbody>().mass;
-        float gravity = Physics.gravity.y;
-        float timeOfFlight = 2 * initialVelocity / gravity;
-        float maxHeight = initialVelocity * initialVelocity / (2 * -gravity);
-        float horizontalRange = initialVelocity * timeOfFlight;
-
-        // Update the bomb's rigidbody with the calculated trajectory
-        bomb.GetComponent<Rigidbody>().velocity = CalculateLaunchVelocity(landingPosition, timeOfFlight);
-
+        LandingDisc.SetActive(false);
+        GameObject bomb = Instantiate(BombDataAsset.Prefab, transform.position, transform.rotation);
+        bomb.GetComponent<Rigidbody>().velocity = launchVelocity;
+        
         lineRenderer.enabled = false;
         Bomb b = bomb.GetComponent<Bomb>();
         b.Initialize(BombDataAsset);
-        //b.Throw(transform.forward);
         EventManager.Invoke(new ThrowEndEvent());
     }
     
-    // Function to calculate the initial velocity based on the chosen landing position
-    private float CalculateInitialVelocity(Vector3 landingPosition)
+    private float CalculateInitialVelocity(Vector3 _landingPosition)
     {
-        // Calculate the displacement in the x and z directions
-        Vector3 displacement = landingPosition - transform.position;
-        displacement.y = 0; // Ignore vertical distance
-
-        // Calculate the time of flight using the horizontal displacement and chosen throw force
+        Vector3 displacement = transform.position - _landingPosition;
+        displacement.y = 0;
+        
         float timeOfFlight = displacement.magnitude / BombDataAsset.ThrowForce;
-
-        // Calculate the initial velocity using the time of flight and displacement
         float initialVelocity = displacement.magnitude / timeOfFlight;
 
         return initialVelocity;
     }
 
-    // Function to calculate the launch velocity based on the chosen landing position and time of flight
     private Vector3 CalculateLaunchVelocity(Vector3 _landingPosition, float timeOfFlight)
     {
-        // Calculate the displacement in the x and z directions
         Vector3 displacement = transform.position - _landingPosition;
-        displacement.y = 0; // Ignore vertical distance
-
-        // Calculate the launch velocity using the horizontal displacement and time of flight
+        displacement.y = 0;
+        
         Vector3 launchVelocity = displacement / timeOfFlight;
-
-        // Set the y component of the launch velocity to account for the vertical motion
         launchVelocity.y = (displacement.y + 0.5f * Physics.gravity.y * timeOfFlight * timeOfFlight) / timeOfFlight;
-
+        
         return launchVelocity;
     }
     
-    private void DrawTrajectory()
+    private Vector3 GetWorldAimDelta()
+    {
+        Transform camTransform = Camera.main.transform;
+        Vector2 gpDelta = inputActions.Player.gp_Aim.ReadValue<Vector2>();
+        Vector2 mouseDelta = inputActions.Player.mkb_Aim.ReadValue<Vector2>() * (Time.deltaTime * 5.0f);
+
+        Vector2 combinedInput = gpDelta + mouseDelta;
+        
+        Vector3 forward = new Vector3(camTransform.forward.x, .0f, camTransform.forward.z).normalized;
+        Vector3 right = new Vector3(camTransform.right.x, .0f, camTransform.right.z).normalized;
+        Vector3 relativeInput = forward * combinedInput.y + right * combinedInput.x;
+        return relativeInput;
+    }
+
+    
+    private void DrawTrajectory(Vector3 _startVelocity)
     {
         Vector3 origin = transform.position;
-        Vector3 startVelocity = BombDataAsset.ThrowForce * transform.forward;
-        Vector3 endPoint = Vector3.positiveInfinity;
+        Vector3 startVelocity = _startVelocity;
+        
+        Vector3 endPoint = Utility.InvalidEndpoint;
         int cutoffPoints = linePoints;
         lineRenderer.positionCount = linePoints;
         float time = 0;
@@ -136,18 +141,25 @@ public class ThrowHandler : MonoBehaviour
             float z = (startVelocity.z * time) + (Physics.gravity.z / 2 * time * time);
             Vector3 point = new Vector3(x, y, z);
             lineRenderer.SetPosition(i, origin + point);
-            if (Physics.Raycast(origin + point, point, out RaycastHit hit, point.magnitude))
+            RaycastHit hit;
+
+            if (i > 0)
             {
-                endPoint = hit.point;
-                cutoffPoints = i + 1;
-                break;
+                Vector3 previous = lineRenderer.GetPosition(i - 1);
+                if (Physics.Linecast(previous, origin + point, out hit))
+                {
+                    endPoint = hit.point;
+                    cutoffPoints = i + 1;
+                    break;
+                }
             }
             time += timeIntervalInPoints;
         }
 
-        if (endPoint != Vector3.positiveInfinity)
+        if (endPoint != Utility.InvalidEndpoint)
         {
             lineRenderer.positionCount = cutoffPoints;
+            LandingDisc.transform.position = endPoint;
         }
     }
 }

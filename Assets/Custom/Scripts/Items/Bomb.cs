@@ -10,6 +10,7 @@ public class Bomb : MonoBehaviour, IThrowable, IImpactor
     public void Initialize(BombData _data)
     {
         data = _data;
+        rb.mass = data.Mass;
     }
     
     public void Throw(Vector3 _direction)

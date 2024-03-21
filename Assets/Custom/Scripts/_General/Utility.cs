@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class Utility
 {
-    
+    public static readonly Vector3 InvalidEndpoint = new(float.MaxValue, float.MaxValue, float.MaxValue);
     
 #if UNITY_EDITOR
     public static void RefreshSceneView()

@@ -15,6 +15,7 @@ MonoBehaviour:
   Name: Bomb01
   Prefab: {fileID: 4346793256899385921, guid: ef058503f1d06ec4ebd69823cdcfb85a, type: 3}
   ThrowForce: 7.6
+  Mass: 1
   SpawnOnImpact: {fileID: 179707940365587259, guid: dd3b3a233b477de44af5242d430670b0,
     type: 3}
   ImpactEffectTime: 5
