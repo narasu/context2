@@ -717,12 +717,17 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7782347988338581649, guid: 7d394d87dd6f9c54cb4e6efdb9b15658, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2656807597930729286, guid: 7d394d87dd6f9c54cb4e6efdb9b15658,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 179832822}
+    - targetCorrespondingSourceObject: {fileID: 2656807597930729286, guid: 7d394d87dd6f9c54cb4e6efdb9b15658,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1978397519}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d394d87dd6f9c54cb4e6efdb9b15658, type: 3}
 --- !u!1001 &479723587
@@ -787,6 +792,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Yang Xia Yu RIGGED(FIX5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9150dc3b9682171468a79e550c0830ae,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 9150dc3b9682171468a79e550c0830ae,
         type: 3}
@@ -935,6 +945,79 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
+--- !u!1001 &515535190
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 580631578}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_Name
+      value: Yusuf Pasha RIGGED(FIX7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: d906429704baa86498f602ad177e4d10,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d0c5324d3cc9f9248805cd8e92650f05, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d906429704baa86498f602ad177e4d10, type: 3}
 --- !u!1 &566071281
 GameObject:
   m_ObjectHideFlags: 0
@@ -4057,6 +4140,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1887105509}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1978397519 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d906429704baa86498f602ad177e4d10,
+    type: 3}
+  m_PrefabInstance: {fileID: 515535190}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2009421208
 GameObject:
   m_ObjectHideFlags: 0
