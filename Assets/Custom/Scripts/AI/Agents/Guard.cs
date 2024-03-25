@@ -11,10 +11,12 @@ public class Guard : MonoBehaviour
 {
     public Transform ViewTransform;
     public List<PathNode> PathNodes;
+    public PathNode RootNode;
     private PathNode[] patrolNodes;
     public PathType PathBehaviour;
     private bool hasPath = false;
-    public float PatrolSpeed, ChaseSpeed;
+    public float PatrolSpeed = 2.0f;
+    public float ChaseSpeed = 4.0f;
     private BTBaseNode tree;
     
     private NavMeshAgent agent;
@@ -42,22 +44,23 @@ public class Guard : MonoBehaviour
 
         var detect = new BTSequence("DetectSequence",
             new BTCacheStatus(blackboard, Strings.DetectionResult, new BTDetect(blackboard)),
-            new BTSetDestinationOnTarget(blackboard));
+            new BTGotoTarget(blackboard));
+        
+        var path = new BTSequence("Path",
+            new BTSetSpeed(blackboard, PatrolSpeed),
+            new BTGotoNextOnPath(blackboard), 
+            moveTo,
+            new BTStopOnPath(blackboard));
         
         var patrol = new BTParallel("Patrol", Policy.RequireAll, Policy.RequireOne,
             new BTInvert(new BTGetStatus(blackboard, Strings.DetectionResult)),
-            new BTSequence("path sequence",
-                new BTSetSpeed(blackboard, 2.0f),
-                new BTPath(blackboard, moveTo),
-                new BTLookAround(blackboard)
-            )
+            path
         );
 
-        var path = new BTSequence("Path", true, patrolNodes.Length, moveTo);
         
         var chase = new BTSelector("Chase Selector",
             new BTSequence("Chase",
-                new BTSetSpeed(blackboard, 4.0f),
+                new BTSetSpeed(blackboard, ChaseSpeed),
                 moveTo,
                 new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
         );
@@ -102,9 +105,11 @@ public class Guard : MonoBehaviour
             Vector3 sumRotation = patrolNodes[i].Rotation.eulerAngles + transform.rotation.eulerAngles;
             patrolNodes[i].Rotation = Quaternion.Euler(sumRotation);
         }
-
+        
         // add starting position as node
-        IEnumerable<PathNode> result = patrolNodes.Prepend(new PathNode(transform.position, transform.rotation));
+        RootNode.Position = transform.position;
+        RootNode.Rotation = transform.rotation;
+        IEnumerable<PathNode> result = patrolNodes.Prepend(RootNode);
         patrolNodes = result.ToArray();
     }
 }

@@ -4,11 +4,11 @@ using UnityEngine.AI;
 /// This node sets the destination on the blackboard to the position of the target, if there is one.
 /// If there is no target, the node will return TaskStatus.Failed.
 /// </summary>
-public class BTSetDestinationOnTarget : BTBaseNode
+public class BTGotoTarget : BTBaseNode
 {
     private readonly Blackboard blackboard;
 
-    public BTSetDestinationOnTarget(Blackboard _blackboard) : base("SetDestinationOnTarget")
+    public BTGotoTarget(Blackboard _blackboard) : base("SetDestinationOnTarget")
     {
         blackboard = _blackboard;
     }

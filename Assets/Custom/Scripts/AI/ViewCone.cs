@@ -17,12 +17,14 @@ public class ViewCone : MonoBehaviour
     public float viewRadius;
 	[Range(0,360)]
 	public float viewAngle;
+	[Range(.0f, 2.0f)] public float TargetLostDelay = 1.0f;
 
 	public LayerMask targetMask;
 	public LayerMask obstacleMask;
 
-	public List<Transform> visibleTargets = new List<Transform>();
-
+	[HideInInspector]public List<Transform> visibleTargets = new List<Transform>();
+	private Transform currentTarget;
+	
 	public float meshResolution;
 	public int edgeResolveIterations;
 	public float edgeDstThreshold;
@@ -37,6 +39,7 @@ public class ViewCone : MonoBehaviour
 	public event TargetLostEventHandler OnTargetLost;
 
 	private bool hasTarget;
+	private Coroutine targetLostDelay;
 
 	private void Start() {
 		viewMesh = new Mesh ();
@@ -80,16 +83,27 @@ public class ViewCone : MonoBehaviour
 
 		if (visibleTargets.Count > 0 && !hasTarget)
 		{
+			if (targetLostDelay != null)
+			{
+				StopCoroutine(targetLostDelay);
+				targetLostDelay = null;
+			}
 			OnTargetFound?.Invoke(new TargetFoundEvent(visibleTargets[0]));
 			//EventManager.Invoke(new TargetFoundEvent(visibleTargets[0]));
 		}
 		else if (visibleTargets.Count == 0 && hasTarget)
 		{
-			OnTargetLost?.Invoke();
+			targetLostDelay = StartCoroutine(TargetLostDelayedInvoke(1.5f));
 			//EventManager.Invoke(new TargetLostEvent());
 		}
 
 		hasTarget = visibleTargets.Count > 0;
+	}
+
+	private IEnumerator TargetLostDelayedInvoke(float _time)
+	{
+		yield return new WaitForSeconds(_time);
+		OnTargetLost?.Invoke();
 	}
 
 	private void DrawFieldOfView() {
