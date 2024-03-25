@@ -34,7 +34,7 @@ public class StationaryGuard : MonoBehaviour
 
         var detect = new BTSequence("DetectSequence", false,
             new BTCacheStatus(blackboard, Strings.DetectionResult, new BTDetect(blackboard)),
-            new BTSetDestinationOnTarget(blackboard));
+            new BTGotoTarget(blackboard));
         
         var standWatch = new BTParallel("StandWatch", Policy.RequireAll, Policy.RequireOne,
             new BTInvert(new BTGetStatus(blackboard, Strings.DetectionResult)),
@@ -42,7 +42,7 @@ public class StationaryGuard : MonoBehaviour
                 new SetDestinationOnStart(blackboard),
                 new BTSetSpeed(blackboard, 2.0f),
                 moveTo,
-                new BTLookAround(blackboard)
+                new BTStopOnPath(blackboard)
             )
         );
         

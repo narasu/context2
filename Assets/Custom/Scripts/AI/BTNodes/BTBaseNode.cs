@@ -8,6 +8,7 @@ using UnityEngine;
 public enum TaskStatus { Success, Failed, Running, Inactive }
 public abstract class BTBaseNode
 {
+    
     protected string name;
     private bool debug;
     private TaskStatus status = TaskStatus.Inactive;
@@ -50,7 +51,7 @@ public abstract class BTBaseNode
     {
         if (status != TaskStatus.Running)
         {
-            OnEnter(false);
+            OnEnter(true);
         }   
         status = Run();
         if (status != TaskStatus.Running)

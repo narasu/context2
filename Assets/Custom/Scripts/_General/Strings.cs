@@ -5,7 +5,7 @@
     public static string Agent = "Agent";
     public static string Animator = "Animator";
     public static string PatrolNodes = "PatrolNodes";
-    public static string PatrolPosition = "PatrolPosition";
+    public static string PatrolNodeIndex = "PatrolPosition";
     public static string Target = "Target";
     public static string DetectionResult = "DetectionResult";
     public static string ViewCone = "ViewCone";
