@@ -11,6 +11,7 @@ public class GuardEditor : Editor
 {
     
     private Guard guard;
+    private SerializedProperty pathRootNode;
     private SerializedProperty pathNodesList;
     private SerializedProperty pathBehaviour;
     private SerializedProperty viewTransform;
@@ -27,6 +28,7 @@ public class GuardEditor : Editor
     private void OnEnable()
     {
         guard = (Guard)target;
+        pathRootNode = serializedObject.FindProperty("RootNode");
         pathNodesList = serializedObject.FindProperty("PathNodes");
         pathBehaviour = serializedObject.FindProperty("PathBehaviour");
         viewTransform = serializedObject.FindProperty("ViewTransform");
@@ -41,20 +43,47 @@ public class GuardEditor : Editor
     {
         serializedObject.Update();
         
-        //GUILayout.Label("", EditorStyles.boldLabel);
+        GUILayout.Label("Properties", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(viewTransform);
+        using (new GUILayout.HorizontalScope())
+        {
+            GUILayout.Label("Patrol Speed: " + patrolSpeed.floatValue, GUILayout.Width(120));
+            //EditorGUILayout.PropertyField(patrolSpeed);
+            patrolSpeed.floatValue =
+                float.Parse(GUILayout.HorizontalSlider(patrolSpeed.floatValue, 1.0f, 3.0f).ToString("F2"));
+            
+        }
+        using (new GUILayout.HorizontalScope())
+        { 
+            GUILayout.Label("Chase Speed: " + chaseSpeed.floatValue, GUILayout.Width(120));
+            //chaseSpeed.floatValue = GUILayout.HorizontalSlider(chaseSpeed.floatValue, 2.0f, 5.0f);
+            chaseSpeed.floatValue = 
+                float.Parse(GUILayout.HorizontalSlider(chaseSpeed.floatValue, 2.0f, 5.0f).ToString("F2"));
+        }
+        
+        EditorGUILayout.Separator();
         
         if (pathNodesList.arraySize > 0)
         {
             EditorGUILayout.Separator();
             GUILayout.Label("Path Settings", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(pathBehaviour);
-            if (GUILayout.Button("Root (Guard Transform)"))
+            EditorGUILayout.Separator();
+            if (GUILayout.Button("Root (Guard Transform)", GUILayout.Width(160)))
             {
                 selectedNodeIndex = -1;
                 selectedNode = 0;
                 SceneView.lastActiveSceneView.Frame(new Bounds(guard.transform.position, Vector3.one * 5.0f), false);
             }
+            using (new GUILayout.HorizontalScope())
+            {
+                var root = pathRootNode;
+                float waitTime = root.FindPropertyRelative("WaitTime").floatValue;
+                GUILayout.Label("Wait Time: " + waitTime, GUILayout.Width(90));
+                waitTime = GUILayout.HorizontalSlider(waitTime, 0.0f, 10.0f);
+                root.FindPropertyRelative("WaitTime").floatValue = waitTime;
+            }
+            EditorGUILayout.Separator();
             EditorGUILayout.Separator();
             
         }
