@@ -11524,6 +11524,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Green container Variant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2159483810809355331, guid: 0fff9dfae94731c49adab56ebb7d765a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6215540054837382113, guid: 0fff9dfae94731c49adab56ebb7d765a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -33840,6 +33845,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI-perfab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1706338567194289695, guid: 96808f489ea5d2e44af8d4c09170839b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6289051080495910206, guid: 96808f489ea5d2e44af8d4c09170839b,
         type: 3}
