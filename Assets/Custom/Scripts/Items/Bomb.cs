@@ -58,6 +58,7 @@ public class Bomb : MonoBehaviour, IThrowable, IImpactor
     
     private void OnCollisionEnter(Collision other)
     {
+        Debug.Log(other.gameObject.name);
         OnImpact(other);
     }
 }
