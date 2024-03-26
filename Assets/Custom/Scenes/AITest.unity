@@ -2893,7 +2893,7 @@ PrefabInstance:
     - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 71.8
+      value: -3.45
       objectReference: {fileID: 0}
     - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
@@ -2903,7 +2903,7 @@ PrefabInstance:
     - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 32.47
+      value: 2.42
       objectReference: {fileID: 0}
     - target: {fileID: 2630478097290998483, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
@@ -2945,50 +2945,100 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guard (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 5749490766321226819, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: ChaseSpeed
+      value: 3.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PatrolSpeed
+      value: 2.06
+      objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.size
-      value: 2
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[0].WaitTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[1].WaitTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[2].WaitTime
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[0].Position.x
-      value: 1.0542619
+      value: 1.2806013
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[0].Position.z
-      value: 3.7788424
+      value: 4.280464
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[0].Rotation.w
-      value: 0.83194345
+      value: 0.8319433
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[0].Rotation.y
-      value: -0.5548604
+      value: -0.5548607
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[1].Position.x
-      value: -3.0737715
+      value: -8.827223
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[1].Position.z
-      value: 5.4969864
+      value: 7.1545587
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[1].Rotation.w
-      value: 0.83194345
+      value: 0.20237607
       objectReference: {fileID: 0}
     - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
         type: 3}
       propertyPath: PathNodes.Array.data[1].Rotation.y
-      value: -0.5548604
+      value: -0.9793079
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[2].Position.x
+      value: -10.128528
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[2].Position.z
+      value: 3.0662422
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[2].Rotation.w
+      value: 0.20237607
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098954659651671055, guid: 8a9645ffaa86d3e428a735347af98b2b,
+        type: 3}
+      propertyPath: PathNodes.Array.data[2].Rotation.y
+      value: -0.9793079
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
