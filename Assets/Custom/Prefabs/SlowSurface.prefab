@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9083753715225609830}
   - component: {fileID: 3517280587464333112}
-  - component: {fileID: 8821176217054077686}
   - component: {fileID: 4484602006231697972}
   - component: {fileID: 2715925265399586309}
-  - component: {fileID: 8272585075657569356}
+  - component: {fileID: 3691897988333621056}
   m_Layer: 0
   m_Name: SlowSurface
   m_TagString: Untagged
@@ -31,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -46,18 +45,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aeb0b00bf244f58b018ba45980254dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8821176217054077686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 179707940365587259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8eff34229a8eec047ac20508434373a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!33 &4484602006231697972
@@ -110,8 +97,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8272585075657569356
-MeshCollider:
+--- !u!135 &3691897988333621056
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -120,7 +107,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 2112
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -128,7 +115,6 @@ MeshCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: 8f0ca3910adf36344ba6711c4eed85cf, type: 3}
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0.05, z: 0}

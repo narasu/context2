@@ -51,7 +51,7 @@ public abstract class BTBaseNode
     {
         if (status != TaskStatus.Running)
         {
-            OnEnter(true);
+            OnEnter(false);
         }   
         status = Run();
         if (status != TaskStatus.Running)

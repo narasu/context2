@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class MovementController : MonoBehaviour
+public class MovementController : MonoBehaviour, ISlowable
 {
     
     public float WalkSpeed, SneakSpeed, Friction, MinJumpHeight, MaxJumpHeight, JumpDuration, FallDuration;
@@ -25,6 +25,8 @@ public class MovementController : MonoBehaviour
     private float hMovementSpeed;
     private float jumpGravity, fallGravity, minJumpVelocity, maxJumpVelocity, currentCoyoteTime;
     private Vector3 velocity;
+    private bool isSlowed;
+    private float slowedMult = 1.0f;
 
     private bool IsCrouched
     {
@@ -116,7 +118,8 @@ public class MovementController : MonoBehaviour
         HandleGravity();
         UpdateGrounded();
 
-        Vector3 newSpeed = Vector3.Lerp(new Vector3(velocity.x, .0f, velocity.z), relativeInput * (IsCrouched ? SneakSpeed : WalkSpeed), Friction);
+        
+        Vector3 newSpeed = Vector3.Lerp(new Vector3(velocity.x, .0f, velocity.z), relativeInput * ((IsCrouched ? SneakSpeed : WalkSpeed) * slowedMult), Friction);
         velocity = new Vector3(newSpeed.x, velocity.y, newSpeed.z);
         characterController.Move(velocity * Time.deltaTime);
     }
@@ -214,4 +217,16 @@ public class MovementController : MonoBehaviour
         
     }
     #endregion
+
+    public void Slow(float _speedMult)
+    {
+        isSlowed = true;
+        slowedMult = _speedMult;
+    }
+
+    public void Unslow()
+    {
+        isSlowed = false;
+        slowedMult = 1.0f;
+    }
 }

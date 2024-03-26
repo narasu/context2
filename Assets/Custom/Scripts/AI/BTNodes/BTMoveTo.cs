@@ -19,10 +19,27 @@ public class BTMoveTo : BTBaseNode
         agent = _blackboard.GetVariable<NavMeshAgent>(Strings.Agent);
     }
 
-
+    protected override void OnEnter(bool _debug)
+    {
+        base.OnEnter(_debug);
+        
+    }
 
     protected override TaskStatus Run()
     {
+        
+        float slowedMult = blackboard.GetVariable<float>(Strings.SlowedMult);
+        
+        switch (blackboard.GetVariable<AgentState>(Strings.AgentState))
+        {
+            case AgentState.PATROL:
+                agent.speed = blackboard.GetVariable<float>(Strings.PatrolSpeed) * slowedMult;
+                break;
+            case AgentState.CHASE:
+                agent.speed = blackboard.GetVariable<float>(Strings.ChaseSpeed) * slowedMult;
+                break;
+        }
+        
         agent.SetDestination(blackboard.GetVariable<Vector3>(Strings.Destination));
         
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid)

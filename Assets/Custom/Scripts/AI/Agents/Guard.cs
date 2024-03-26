@@ -7,7 +7,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public enum PathType { LOOP, BACK_AND_FORTH }
-public class Guard : MonoBehaviour
+
+public class Guard : MonoBehaviour, ISlowable
 {
     public Transform ViewTransform;
     public List<PathNode> PathNodes;
@@ -39,6 +40,12 @@ public class Guard : MonoBehaviour
         blackboard.SetVariable(Strings.PatrolNodes, patrolNodes);
         blackboard.SetVariable(Strings.ViewCone, viewCone);
         blackboard.SetVariable(Strings.ViewTransform, ViewTransform);
+        blackboard.SetVariable(Strings.PatrolSpeed, PatrolSpeed);
+        blackboard.SetVariable(Strings.ChaseSpeed, ChaseSpeed);
+
+        blackboard.SetVariable(Strings.AgentState, AgentState.PATROL);
+        blackboard.SetVariable(Strings.IsSlowed, false);
+        blackboard.SetVariable(Strings.SlowedMult, 1.0f);
 
         var moveTo = new BTMoveTo(blackboard);
 
@@ -47,7 +54,7 @@ public class Guard : MonoBehaviour
             new BTGotoTarget(blackboard));
         
         var path = new BTSequence("Path",
-            new BTSetSpeed(blackboard, PatrolSpeed),
+            new BTSetAgentState(blackboard, AgentState.PATROL),
             new BTGotoNextOnPath(blackboard), 
             moveTo,
             new BTStopOnPath(blackboard));
@@ -60,7 +67,7 @@ public class Guard : MonoBehaviour
         
         var chase = new BTSelector("Chase Selector",
             new BTSequence("Chase",
-                new BTSetSpeed(blackboard, ChaseSpeed),
+                new BTSetAgentState(blackboard, AgentState.CHASE),
                 moveTo,
                 new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
         );
@@ -111,5 +118,27 @@ public class Guard : MonoBehaviour
         RootNode.Rotation = transform.rotation;
         IEnumerable<PathNode> result = patrolNodes.Prepend(RootNode);
         patrolNodes = result.ToArray();
+    }
+
+    public void Slow(float _speedMult)
+    {
+        blackboard.SetVariable(Strings.IsSlowed, true);
+        blackboard.SetVariable(Strings.SlowedMult, _speedMult);
+        Debug.Log("guard slowed");
+    }
+
+    public void Unslow()
+    {
+        switch (blackboard.GetVariable<AgentState>(Strings.AgentState))
+        {
+            case AgentState.PATROL:
+                agent.speed = blackboard.GetVariable<float>(Strings.PatrolSpeed);
+                break;
+            case AgentState.CHASE:
+                agent.speed = blackboard.GetVariable<float>(Strings.ChaseSpeed);
+                break;
+        }
+        blackboard.SetVariable(Strings.IsSlowed, false);
+        blackboard.SetVariable(Strings.SlowedMult, 1.0f);
     }
 }
