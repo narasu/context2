@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65069766041130506}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e70c44d9c19b3fe43917afbf254022fe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c755c09d5ec65ae4191934f0809d449f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -675,7 +675,7 @@ GameObject:
   - component: {fileID: 5854811532103630337}
   - component: {fileID: 767298760105230531}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: captured
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -728,7 +728,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 615cee69ccb153148ba09500355c1032, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6da1752ec2c66494f952b36c99996633, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
