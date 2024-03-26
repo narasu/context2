@@ -11,13 +11,13 @@ public class SlowSurface : MonoBehaviour, IImpactEffect
     
     private void Start()
     {
-        Action onTimerExpired = () => Destroy(gameObject);
-        lifetime = new Timer(EffectTime, onTimerExpired);
+        //Action onTimerExpired = () => Destroy(gameObject);
+        //lifetime = new Timer(EffectTime, onTimerExpired);
     }
 
     private void Update()
     {
-        lifetime.RunTimer();
+        //lifetime.RunTimer();
     }
 
     private void OnTriggerEnter(Collider other)

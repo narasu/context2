@@ -206,6 +206,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BombDataAsset: {fileID: 11400000, guid: 9b3fd9abecb48c84dbd10ef2a49c699c, type: 2}
   LandingDisc: {fileID: 1220746197222722018}
+  LineIgnoreMask:
+    serializedVersion: 2
+    m_Bits: 6336
   linePoints: 175
   timeIntervalInPoints: 0.01
 --- !u!120 &5768833285289665769

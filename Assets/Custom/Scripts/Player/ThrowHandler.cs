@@ -12,6 +12,7 @@ public class ThrowHandler : MonoBehaviour
 {
     public BombData BombDataAsset;
     public GameObject LandingDisc;
+    public LayerMask LineIgnoreMask;
     private LineRenderer lineRenderer;
     
     [Header("Trajectory Display")]
@@ -146,7 +147,7 @@ public class ThrowHandler : MonoBehaviour
             if (i > 0)
             {
                 Vector3 previous = lineRenderer.GetPosition(i - 1);
-                if (Physics.Linecast(previous, origin + point, out hit))
+                if (Physics.Linecast(previous, origin + point, out hit, ~LineIgnoreMask))
                 {
                     endPoint = hit.point;
                     cutoffPoints = i + 1;
