@@ -15359,6 +15359,7 @@ GameObject:
   - component: {fileID: 512310244}
   - component: {fileID: 512310243}
   - component: {fileID: 512310242}
+  - component: {fileID: 512310245}
   m_Layer: 0
   m_Name: Machine2
   m_TagString: Untagged
@@ -15447,7 +15448,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 512310245}
+        m_TargetAssemblyTypeName: Objective, Assembly-CSharp
+        m_MethodName: Complete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &512310245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512310239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e09c3cd872b3c44a971fc8eb485cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &520155163
 GameObject:
   m_ObjectHideFlags: 0
@@ -15914,6 +15939,7 @@ GameObject:
   - component: {fileID: 527796232}
   - component: {fileID: 527796231}
   - component: {fileID: 527796230}
+  - component: {fileID: 527796233}
   m_Layer: 0
   m_Name: Machine5
   m_TagString: Untagged
@@ -16002,7 +16028,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 527796233}
+        m_TargetAssemblyTypeName: Objective, Assembly-CSharp
+        m_MethodName: Complete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &527796233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527796227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e09c3cd872b3c44a971fc8eb485cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &546021647
 GameObject:
   m_ObjectHideFlags: 0
@@ -23481,6 +23531,7 @@ GameObject:
   - component: {fileID: 755994018}
   - component: {fileID: 755994017}
   - component: {fileID: 755994016}
+  - component: {fileID: 755994019}
   m_Layer: 0
   m_Name: Machine1
   m_TagString: Untagged
@@ -23571,7 +23622,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 755994019}
+        m_TargetAssemblyTypeName: Objective, Assembly-CSharp
+        m_MethodName: Complete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &755994019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755994013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e09c3cd872b3c44a971fc8eb485cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &756411057
 GameObject:
   m_ObjectHideFlags: 0
@@ -28668,6 +28743,7 @@ GameObject:
   - component: {fileID: 1073758167}
   - component: {fileID: 1073758166}
   - component: {fileID: 1073758165}
+  - component: {fileID: 1073758168}
   m_Layer: 0
   m_Name: Machine3
   m_TagString: Untagged
@@ -28756,7 +28832,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1073758168}
+        m_TargetAssemblyTypeName: Objective, Assembly-CSharp
+        m_MethodName: Complete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1073758168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073758162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e09c3cd872b3c44a971fc8eb485cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1075071094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46721,6 +46821,7 @@ GameObject:
   - component: {fileID: 1727511418}
   - component: {fileID: 1727511417}
   - component: {fileID: 1727511416}
+  - component: {fileID: 1727511419}
   m_Layer: 0
   m_Name: Machine4
   m_TagString: Untagged
@@ -46809,7 +46910,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1727511419}
+        m_TargetAssemblyTypeName: Objective, Assembly-CSharp
+        m_MethodName: Complete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1727511419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727511413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e09c3cd872b3c44a971fc8eb485cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1730795524
 GameObject:
   m_ObjectHideFlags: 0
