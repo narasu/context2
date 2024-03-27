@@ -24,7 +24,7 @@ public class Guard : MonoBehaviour, ISlowable
     private Animator animator;
     private ViewCone viewCone;
     private Blackboard blackboard = new();
-    
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -46,6 +46,7 @@ public class Guard : MonoBehaviour, ISlowable
         blackboard.SetVariable(Strings.AgentState, AgentState.PATROL);
         blackboard.SetVariable(Strings.IsSlowed, false);
         blackboard.SetVariable(Strings.SlowedMult, 1.0f);
+        
 
         var moveTo = new BTMoveTo(blackboard);
 
@@ -61,6 +62,7 @@ public class Guard : MonoBehaviour, ISlowable
         
         var patrol = new BTParallel("Patrol", Policy.RequireAll, Policy.RequireOne,
             new BTInvert(new BTGetStatus(blackboard, Strings.DetectionResult)),
+
             path
         );
 
@@ -69,6 +71,7 @@ public class Guard : MonoBehaviour, ISlowable
             new BTSequence("Chase",
                 new BTSetAgentState(blackboard, AgentState.CHASE),
                 moveTo,
+
                 new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
         );
         
