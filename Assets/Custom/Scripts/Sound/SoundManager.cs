@@ -6,6 +6,7 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
     [SerializeField] private AudioSource soundObject;
+    public AudioClip Music;
 
     private void Awake()
     {
@@ -13,6 +14,11 @@ public class SoundManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    public void PlayMusic()
+    {
+        PlaySoundClip(Music, transform, 1f);
     }
 
     public void PlaySoundClip(AudioClip audioClip,Transform spawnTransform, float volume)
@@ -24,7 +30,7 @@ public class SoundManager : MonoBehaviour
         // assign volume
         audioSource.volume = volume;
         //play sound
-        audioSource.Play();
+        audioSource.PlayOneShot(audioSource.clip);
         //lenght of audio;
         float clipLength = audioSource.clip.length;
         //destroy object
@@ -41,7 +47,7 @@ public class SoundManager : MonoBehaviour
         // assign volume
         audioSource.volume = volume;
         //play sound
-        audioSource.Play();
+        audioSource.PlayOneShot(audioSource.clip);
         //lenght of audio;
         float clipLength = audioSource.clip.length;
         //destroy object

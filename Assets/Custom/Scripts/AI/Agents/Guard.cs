@@ -25,12 +25,18 @@ public class Guard : MonoBehaviour, ISlowable
     private ViewCone viewCone;
     private Blackboard blackboard = new();
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         viewCone = GetComponentInChildren<ViewCone>();
+        startPosition = transform.position;
+        startRotation = transform.rotation;
         InitializePath();
+        
     }
 
     private void Start()
@@ -104,6 +110,17 @@ public class Guard : MonoBehaviour, ISlowable
             EventManager.Invoke(new PlayerCaughtEvent());
         }
     }
+
+    public void Reset()
+    {
+        tree?.OnTerminate();
+        blackboard.SetVariable(Strings.AgentState, AgentState.PATROL);
+        blackboard.SetVariable(Strings.IsSlowed, false);
+        blackboard.SetVariable(Strings.SlowedMult, 1.0f);
+        blackboard.SetVariable(Strings.PatrolNodeIndex, 0);
+        transform.SetPositionAndRotation(startPosition, startRotation);
+    }
+    
     public void Slow(float _speedMult)
     {
         blackboard.SetVariable(Strings.IsSlowed, true);

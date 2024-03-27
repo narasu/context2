@@ -61,7 +61,8 @@ public class ThrowHandler : MonoBehaviour
     private void OnDisable()
     {
         inputActions.Disable();
-        
+        lineRenderer.enabled = false;
+        LandingDisc.SetActive(false);
         inputActions.Player.Throw.performed -= OnThrow;
         inputActions.Player.Throw.canceled -= OnThrowReleased;
     }

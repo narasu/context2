@@ -52,6 +52,7 @@ public class ClickEnDisepear : MonoBehaviour
             {
                 forthScreen.SetActive(false);
                 MachineCount.SetActive(true);
+                EventManager.Invoke(new GameStartedEvent());
                 SoundManager.instance.PlaySoundClip(musicSoundClip, transform, 1f);
             }
             switched++;

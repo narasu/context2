@@ -69,6 +69,8 @@ public class MovementController : MonoBehaviour, ISlowable
     private bool isThrowing;
     private Action<ThrowStartEvent> throwStartEventHandler;
     private Action<ThrowEndEvent> throwEndEventHandler;
+    private Vector3 startPosition;
+    private Quaternion startRotation;
 
     private void Awake()
     {
@@ -86,18 +88,13 @@ public class MovementController : MonoBehaviour, ISlowable
         
         throwStartEventHandler = _ => isThrowing = true;
         throwEndEventHandler = _ => isThrowing = false;
+        
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
     
     private void Update()
     {
-        // if (inputActions == null)
-        // {
-        //     if (ServiceLocator.TryLocate(Strings.InputAsset, out object asset))
-        //     {
-        //         inputActions = asset as GameInputActions;
-        //     }
-        //     return;
-        // }
         Vector2 inputVector = inputActions.Player.Walk.ReadValue<Vector2>();
         
         Vector3 forward = new Vector3(camTransform.forward.x, .0f, camTransform.forward.z).normalized;
@@ -132,15 +129,6 @@ public class MovementController : MonoBehaviour, ISlowable
 
     private void OnEnable()
     {
-        // if (ServiceLocator.TryLocate(Strings.InputManager, out object manager))
-        // {
-        //     var inputManager = manager as InputManager;
-        //     inputActions = inputManager.InputActions;
-        // }
-        // else
-        // {
-        //     Debug.LogError("No input manager found!");
-        // }
         inputActions.Enable();
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpRelease;
@@ -234,5 +222,17 @@ public class MovementController : MonoBehaviour, ISlowable
     {
         isSlowed = false;
         slowedMult = 1.0f;
+    }
+
+    public void Reset()
+    {
+        isSlowed = false;
+        isJumping = false;
+        IsCrouched = false;
+        IsGrounded = true;
+        
+        slowedMult = 1.0f;
+        velocity = Vector3.zero;
+        transform.SetPositionAndRotation(startPosition, startRotation);
     }
 }
