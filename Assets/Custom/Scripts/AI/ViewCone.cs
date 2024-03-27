@@ -59,9 +59,9 @@ public class ViewCone : MonoBehaviour
 		}
 	}
 
-	void LateUpdate() {
-		DrawFieldOfView ();
-	}
+	// void LateUpdate() {
+	// 	DrawFieldOfView ();
+	// }
 
 	private void FindVisibleTargets() {
 		visibleTargets.Clear ();
