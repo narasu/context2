@@ -14,7 +14,7 @@ public delegate void TargetLostEventHandler();
 
 public class ViewCone : MonoBehaviour
 {
-    public float viewRadius;
+    [Min(0.1f)]public float viewRadius;
 	[Range(0,360)]
 	public float viewAngle;
 	[Range(.0f, 2.0f)] public float TargetLostDelay = 1.0f;
@@ -24,6 +24,11 @@ public class ViewCone : MonoBehaviour
 
 	[HideInInspector]public List<Transform> visibleTargets = new List<Transform>();
 	private Transform currentTarget;
+	public event TargetFoundEventHandler OnTargetFound;
+	public event TargetLostEventHandler OnTargetLost;
+
+	private bool hasTarget;
+	private Coroutine targetLostDelay;
 	
 	public float meshResolution;
 	public int edgeResolveIterations;
@@ -33,13 +38,11 @@ public class ViewCone : MonoBehaviour
 
 	public MeshFilter viewMeshFilter;
 	Mesh viewMesh;
+	private int stepCount;
+	private Vector3[] vertices;
+	private int[] triangles;
 	
 	
-	public event TargetFoundEventHandler OnTargetFound;
-	public event TargetLostEventHandler OnTargetLost;
-
-	private bool hasTarget;
-	private Coroutine targetLostDelay;
 
 	private void Start() {
 		viewMesh = new Mesh ();
@@ -47,25 +50,36 @@ public class ViewCone : MonoBehaviour
 		viewMeshFilter.mesh = viewMesh;
 
 		StartCoroutine ("FindTargetsWithDelay", .2f);
+		stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
 		
-		
+		vertices = new Vector3[stepCount];
+		triangles = new int[(stepCount-2) * 3];
+
+		vertices [0] = Vector3.zero;
+		for (int i = 0; i < vertices.Length - 1; i++) {
+			if (i < stepCount - 2) {
+				triangles [i * 3] = 0;
+				triangles [i * 3 + 1] = i + 1;
+				triangles [i * 3 + 2] = i + 2;
+			}
+		}
+		viewMesh.vertices = vertices;
+		viewMesh.triangles = triangles;
+	}
+	void LateUpdate() {
+		DrawFieldOfView ();
 	}
 
-
+#region FIND_TARGET
 	private IEnumerator FindTargetsWithDelay(float delay) {
 		while (true) {
 			yield return new WaitForSeconds (delay);
 			FindVisibleTargets ();
 		}
 	}
-
-	// void LateUpdate() {
-	// 	DrawFieldOfView ();
-	// }
-
+	
 	private void FindVisibleTargets() {
 		visibleTargets.Clear ();
-		//List<Transform> newTargets = new();
 		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
 		
 		
@@ -89,12 +103,10 @@ public class ViewCone : MonoBehaviour
 				targetLostDelay = null;
 			}
 			OnTargetFound?.Invoke(new TargetFoundEvent(visibleTargets[0]));
-			//EventManager.Invoke(new TargetFoundEvent(visibleTargets[0]));
 		}
 		else if (visibleTargets.Count == 0 && hasTarget)
 		{
 			targetLostDelay = StartCoroutine(TargetLostDelayedInvoke(1.5f));
-			//EventManager.Invoke(new TargetLostEvent());
 		}
 
 		hasTarget = visibleTargets.Count > 0;
@@ -105,58 +117,26 @@ public class ViewCone : MonoBehaviour
 		yield return new WaitForSeconds(_time);
 		OnTargetLost?.Invoke();
 	}
+#endregion
 
 	private void DrawFieldOfView() {
-		int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
-		float stepAngleSize = viewAngle / stepCount;
-		List<Vector3> viewPoints = new List<Vector3> ();
-		ViewCastInfo oldViewCast = new ViewCastInfo ();
-		for (int i = 0; i <= stepCount; i++) {
-			float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
-			ViewCastInfo newViewCast = ViewCast (angle);
-
-			if (i > 0) {
-				bool edgeDstThresholdExceeded = Mathf.Abs (oldViewCast.dst - newViewCast.dst) > edgeDstThreshold;
-				if (oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDstThresholdExceeded)) {
-					EdgeInfo edge = FindEdge (oldViewCast, newViewCast);
-					if (edge.pointA != Vector3.zero) {
-						viewPoints.Add (edge.pointA);
-					}
-					if (edge.pointB != Vector3.zero) {
-						viewPoints.Add (edge.pointB);
-					}
-				}
-
-			}
-
-
-			viewPoints.Add (newViewCast.point);
-			oldViewCast = newViewCast;
-		}
-
-		int vertexCount = viewPoints.Count + 1;
-		Vector3[] vertices = new Vector3[vertexCount];
-		int[] triangles = new int[(vertexCount-2) * 3];
-
-		vertices [0] = Vector3.zero;
-		for (int i = 0; i < vertexCount - 1; i++) {
-			vertices [i + 1] = transform.InverseTransformPoint(viewPoints [i]) + Vector3.forward * maskCutawayDst;
-
-			if (i < vertexCount - 2) {
-				triangles [i * 3] = 0;
-				triangles [i * 3 + 1] = i + 1;
-				triangles [i * 3 + 2] = i + 2;
-			}
-		}
-
-		viewMesh.Clear ();
-
-		// a hack to make looking around work
-		viewMeshFilter.transform.rotation = transform.rotation;
 		
+		float stepAngleSize = viewAngle / stepCount;
+		for (int i = 1; i < vertices.Length; i++)
+		{
+			float angle = -viewAngle / 2 + stepAngleSize * i;
+			//float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
+			vertices[i] = DirFromAngle(angle, true) * viewRadius;
+			Vector3 dir = transform.TransformDirection(vertices[i]);
+			if (Physics.Raycast(transform.position, dir, out RaycastHit hit, viewRadius, obstacleMask))
+			{
+				vertices[i] = transform.InverseTransformPoint(hit.point);
+			}
+		}
+		viewMeshFilter.transform.rotation = transform.rotation;
+
 		viewMesh.vertices = vertices;
-		viewMesh.triangles = triangles;
-		viewMesh.RecalculateNormals ();
+		viewMesh.RecalculateBounds();
 	}
 
 
