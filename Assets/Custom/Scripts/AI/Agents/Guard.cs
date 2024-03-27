@@ -94,6 +94,35 @@ public class Guard : MonoBehaviour, ISlowable
         tree?.OnTerminate();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            EventManager.Invoke(new PlayerCaughtEvent());
+        }
+    }
+    public void Slow(float _speedMult)
+    {
+        blackboard.SetVariable(Strings.IsSlowed, true);
+        blackboard.SetVariable(Strings.SlowedMult, _speedMult);
+        Debug.Log("guard slowed");
+    }
+
+    public void Unslow()
+    {
+        switch (blackboard.GetVariable<AgentState>(Strings.AgentState))
+        {
+            case AgentState.PATROL:
+                agent.speed = blackboard.GetVariable<float>(Strings.PatrolSpeed);
+                break;
+            case AgentState.CHASE:
+                agent.speed = blackboard.GetVariable<float>(Strings.ChaseSpeed);
+                break;
+        }
+        blackboard.SetVariable(Strings.IsSlowed, false);
+        blackboard.SetVariable(Strings.SlowedMult, 1.0f);
+    }
+
     private void InitializePath()
     {
         if (PathNodes.Count == 0)
@@ -120,25 +149,4 @@ public class Guard : MonoBehaviour, ISlowable
         patrolNodes = result.ToArray();
     }
 
-    public void Slow(float _speedMult)
-    {
-        blackboard.SetVariable(Strings.IsSlowed, true);
-        blackboard.SetVariable(Strings.SlowedMult, _speedMult);
-        Debug.Log("guard slowed");
-    }
-
-    public void Unslow()
-    {
-        switch (blackboard.GetVariable<AgentState>(Strings.AgentState))
-        {
-            case AgentState.PATROL:
-                agent.speed = blackboard.GetVariable<float>(Strings.PatrolSpeed);
-                break;
-            case AgentState.CHASE:
-                agent.speed = blackboard.GetVariable<float>(Strings.ChaseSpeed);
-                break;
-        }
-        blackboard.SetVariable(Strings.IsSlowed, false);
-        blackboard.SetVariable(Strings.SlowedMult, 1.0f);
-    }
 }
