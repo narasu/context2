@@ -30,9 +30,26 @@ public class SoundManager : MonoBehaviour
         //destroy object
         Destroy(audioSource.gameObject, clipLength);
     }
+    public void PlayRandomSoundClip(AudioClip[] audioClip, Transform spawnTransform, float volume)
+    {
+        // random index
+        int rand = Random.Range(0, audioClip.Length);
+        //spawn Object
+        AudioSource audioSource = Instantiate(soundObject, spawnTransform.position, Quaternion.identity);
+        // assing audioClip
+        audioSource.clip = audioClip[rand];
+        // assign volume
+        audioSource.volume = volume;
+        //play sound
+        audioSource.Play();
+        //lenght of audio;
+        float clipLength = audioSource.clip.length;
+        //destroy object
+        Destroy(audioSource.gameObject, clipLength);
+    }
     //ClickEnDissapear is muziek
     //MovementController is stap?
-    // BTDetect = guard hey/stop
+    // ViewCone = guard hey/stop
     // [SerializeField] private AudioClip guardSoundClip;
 
     // SoundManager.instance.PlaySoundClip(guardSoundClip, transform, 1f);
