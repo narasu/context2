@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour
     //ClickEnDissapear is muziek
     //MovementController is stap?
     // BTDetect = guard hey/stop
-   // [SerializeField] private AudioClip guardSoundClip;
+    // [SerializeField] private AudioClip guardSoundClip;
 
-   // SoundManager.instance.PlaySoundClip(guardSoundClip, transform, 1f);
+    // SoundManager.instance.PlaySoundClip(guardSoundClip, transform, 1f);
 }

@@ -61,6 +61,7 @@ MonoBehaviour:
   edgeDstThreshold: 0.18
   maskCutawayDst: 0.1
   viewMeshFilter: {fileID: 954805211821628906}
+  guardSoundClip: {fileID: 8300000, guid: c7b8851ad858cc34aa65c8a056c6acea, type: 3}
 --- !u!111 &7144090184826453084
 Animation:
   m_ObjectHideFlags: 0

@@ -41,8 +41,8 @@ public class ViewCone : MonoBehaviour
 	private int stepCount;
 	private Vector3[] vertices;
 	private int[] triangles;
-	
-	
+	[SerializeField] private AudioClip guardSoundClip;
+
 
 	private void Start() {
 		viewMesh = new Mesh ();
@@ -102,6 +102,7 @@ public class ViewCone : MonoBehaviour
 				StopCoroutine(targetLostDelay);
 				targetLostDelay = null;
 			}
+			SoundManager.instance.PlaySoundClip(guardSoundClip, transform, 1f);
 			OnTargetFound?.Invoke(new TargetFoundEvent(visibleTargets[0]));
 		}
 		else if (visibleTargets.Count == 0 && hasTarget)
