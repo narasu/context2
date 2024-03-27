@@ -13,7 +13,8 @@ public class BTDetect : BTBaseNode
     private ViewCone viewCone;
     
     private bool hasTarget;
-    
+   
+
     public BTDetect(Blackboard _blackboard) : base("Detect")
     {
         blackboard = _blackboard;
@@ -22,7 +23,7 @@ public class BTDetect : BTBaseNode
         viewCone.OnTargetFound += OnTargetFound;
         viewCone.OnTargetLost += OnTargetLost;
     }
-    
+   
     public override void OnTerminate()
     {
         base.OnTerminate();
@@ -38,10 +39,11 @@ public class BTDetect : BTBaseNode
     private void OnTargetFound(TargetFoundEvent _event)
     {
         hasTarget = true;
+       
         Debug.Log(_event.Target);
         blackboard.SetVariable(Strings.Target, _event.Target);
     }
-
+   
     private void OnTargetLost()
     {
         blackboard.SetVariable<Transform>(Strings.Target, null);

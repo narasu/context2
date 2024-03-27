@@ -14,6 +14,7 @@ public class ClickEnDisepear : MonoBehaviour
     public GameObject forthScreen;
     public GameObject MachineCount;
     private int switched = 0;
+    [SerializeField] private AudioClip musicSoundClip;
 
     void Start()
     {
@@ -51,6 +52,7 @@ public class ClickEnDisepear : MonoBehaviour
             {
                 forthScreen.SetActive(false);
                 MachineCount.SetActive(true);
+                SoundManager.instance.PlaySoundClip(musicSoundClip, transform, 1f);
             }
             switched++;
         }

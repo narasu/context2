@@ -27,7 +27,8 @@ public class MovementController : MonoBehaviour, ISlowable
     private Vector3 velocity;
     private bool isSlowed;
     private float slowedMult = 1.0f;
-
+    //sound making
+    [SerializeField] private  AudioClip walkSoundClip;
     private bool IsCrouched
     {
         get => isCrouched;
@@ -108,11 +109,13 @@ public class MovementController : MonoBehaviour, ISlowable
             float angle = Mathf.Atan2(relativeInput.x, relativeInput.z) * Mathf.Rad2Deg;
             Quaternion newRotation = Quaternion.AngleAxis(angle, Vector3.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, .2f);
+           // SoundManager.instance.PlaySoundClip(walkSoundClip, transform, 1f);
             animator.SetBool(a_IsWalking, true);
         }
         else
         {
             animator.SetBool(a_IsWalking, false);
+            
         }
         
         HandleGravity();
@@ -122,6 +125,9 @@ public class MovementController : MonoBehaviour, ISlowable
         Vector3 newSpeed = Vector3.Lerp(new Vector3(velocity.x, .0f, velocity.z), relativeInput * ((IsCrouched ? SneakSpeed : WalkSpeed) * slowedMult), Friction);
         velocity = new Vector3(newSpeed.x, velocity.y, newSpeed.z);
         characterController.Move(velocity * Time.deltaTime);
+        //sound making
+        
+       
     }
 
     private void OnEnable()
