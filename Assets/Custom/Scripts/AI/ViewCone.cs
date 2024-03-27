@@ -128,6 +128,7 @@ public class ViewCone : MonoBehaviour
 			//float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
 			vertices[i] = DirFromAngle(angle, true) * viewRadius;
 			Vector3 dir = transform.TransformDirection(vertices[i]);
+			dir.y = transform.position.y;
 			if (Physics.Raycast(transform.position, dir, out RaycastHit hit, viewRadius, obstacleMask))
 			{
 				vertices[i] = transform.InverseTransformPoint(hit.point);
