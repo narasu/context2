@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class ViewCone : MonoBehaviour
 	public event TargetLostEventHandler OnTargetLost;
 
 	private bool hasTarget;
+	private Coroutine findTargets;
 	private Coroutine targetLostDelay;
 	
 	public float meshResolution;
@@ -43,13 +45,12 @@ public class ViewCone : MonoBehaviour
 	private int[] triangles;
 	[SerializeField] private AudioClip[] guardSoundClips;
 
-
 	private void Start() {
 		viewMesh = new Mesh ();
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 
-		StartCoroutine ("FindTargetsWithDelay", .2f);
+		
 		stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
 		
 		vertices = new Vector3[stepCount];
@@ -70,7 +71,29 @@ public class ViewCone : MonoBehaviour
 		DrawFieldOfView ();
 	}
 
-#region FIND_TARGET
+	private void OnEnable()
+	{
+		findTargets = StartCoroutine ("FindTargetsWithDelay", .2f);
+	}
+
+	private void OnDisable()
+	{
+
+		if (findTargets != null)
+		{
+			StopCoroutine(findTargets);
+		}
+		if (targetLostDelay != null)
+		{
+			StopCoroutine(targetLostDelay);
+			targetLostDelay = null;
+		}
+
+		OnTargetLost?.Invoke();
+		hasTarget = false;
+	}
+
+	#region FIND_TARGET
 	private IEnumerator FindTargetsWithDelay(float delay) {
 		while (true) {
 			yield return new WaitForSeconds (delay);

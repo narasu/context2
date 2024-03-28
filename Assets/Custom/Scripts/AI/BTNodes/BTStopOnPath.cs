@@ -17,7 +17,7 @@ public class BTStopOnPath : BTBaseNode
         viewTransform = _blackboard.GetVariable<Transform>(Strings.ViewTransform);
         anim = viewTransform.GetComponent<Animation>();
         patrolNodes = _blackboard.GetVariable<PathNode[]>(Strings.PatrolNodes);
-        anim.Play("ViewRotate");
+        
     }
 
     protected override void OnEnter(bool _debug)
@@ -26,10 +26,7 @@ public class BTStopOnPath : BTBaseNode
         patrolNodeIndex = blackboard.GetVariable<int>(Strings.PatrolNodeIndex);
         waitTime = patrolNodes[patrolNodeIndex].WaitTime;
         t = .0f;
-        foreach (AnimationState a in anim)
-        {
-            a.speed = 1.0f;
-        }
+        anim.Play("ViewRotate");
     }
 
     protected override TaskStatus Run()
@@ -45,21 +42,17 @@ public class BTStopOnPath : BTBaseNode
     public override void OnExit(TaskStatus _status)
     {
         base.OnExit(_status);
-        foreach (AnimationState a in anim)
-        {
-            a.time = .0f;
-            a.speed = .0f;
-        }
+        anim.Rewind();
+        anim.Stop();
+        viewTransform.localRotation = Quaternion.identity;
     }
 
     public override void OnTerminate()
     {
         base.OnTerminate();
-        foreach (AnimationState a in anim)
-        {
-            a.time = .0f;
-            a.speed = .0f;
-        }
+        anim.Rewind();
+        anim.Stop();
+        viewTransform.localRotation = Quaternion.identity;
     }
 }
 

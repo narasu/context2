@@ -98,6 +98,16 @@ public class Guard : MonoBehaviour, ISlowable
         tree?.Tick();
     }
 
+    private void OnEnable()
+    {
+        viewCone.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        viewCone.enabled = false;
+    }
+
     private void OnDestroy()
     {
         tree?.OnTerminate();
@@ -113,12 +123,18 @@ public class Guard : MonoBehaviour, ISlowable
 
     public void Reset()
     {
-        tree?.OnTerminate();
-        blackboard.SetVariable(Strings.AgentState, AgentState.PATROL);
+        transform.SetPositionAndRotation(startPosition, startRotation);
+        //tree?.OnTerminate();
+        
         blackboard.SetVariable(Strings.IsSlowed, false);
         blackboard.SetVariable(Strings.SlowedMult, 1.0f);
+        blackboard.SetVariable(Strings.AgentState, AgentState.PATROL);
+        agent.speed = blackboard.GetVariable<float>(Strings.PatrolSpeed);
         blackboard.SetVariable(Strings.PatrolNodeIndex, 0);
-        transform.SetPositionAndRotation(startPosition, startRotation);
+        blackboard.SetVariable(Strings.Destination, startPosition);
+        
+        
+        agent.ResetPath();
     }
     
     public void Slow(float _speedMult)

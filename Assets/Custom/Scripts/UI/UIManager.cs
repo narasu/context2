@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class UIManager : MonoBehaviour
     private GameInputActions inputActions;
     private GameObject[] sequence;
     private int currentScreen = 0;
+    private bool gameStarted = false;
+    private bool caught = false;
     private Action<ObjectiveCompletedEvent> objectiveCompletedEventHandler;
     private Action<PlayerCaughtEvent> playerCaughtEventHandler;
 
@@ -30,7 +33,6 @@ public class UIManager : MonoBehaviour
         inputActions.Player.Jump.performed += Next;
         sequence = new[]
         {
-            Disclaimer,
             Tutorial,
             IDCards[0]
         };
@@ -43,26 +45,50 @@ public class UIManager : MonoBehaviour
     {
         inputActions.Player.Jump.performed -= Next;
         inputActions.Disable();
+        
         EventManager.Unsubscribe(typeof(PlayerCaughtEvent), playerCaughtEventHandler);
     }
 
     private void OnPlayerCaught(PlayerCaughtEvent _event)
     {
-        CaughtScreens[0].SetActive(true);
+        caught = true;
+        gameStarted = false;
+        CaughtScreens[GameManager.Instance.currentRun].SetActive(true);
+        ObjectiveCounter.SetActive(false);
     }
     
     private void Next(InputAction.CallbackContext _ctx)
     {
-        sequence[currentScreen].SetActive(false);
-        if (currentScreen < sequence.Length - 1)
+        if (!gameStarted && !caught)
         {
-            currentScreen++;
-            sequence[currentScreen].SetActive(true);
+            sequence[currentScreen].SetActive(false);
+            if (currentScreen < sequence.Length - 1)
+            {
+                currentScreen++;
+                sequence[currentScreen].SetActive(true);
+            }
+            else
+            {
+                ObjectiveCounter.SetActive(true);
+                EventManager.Invoke(new GameStartedEvent());
+                gameStarted = true;
+            }
         }
-        else
+
+        if (caught)
         {
-            ObjectiveCounter.SetActive(true);
-            EventManager.Invoke(new GameStartedEvent());
+            if (GameManager.Instance.currentRun == 2)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                return;
+            }
+            // ObjectiveCounter.SetActive(true);
+            // EventManager.Invoke(new GameStartedEvent());
+            CaughtScreens[0].SetActive(false);
+            currentScreen = 1;
+            sequence[1] = IDCards[1];
+            sequence[1].SetActive(true);
+            caught = false;
         }
     }
 }

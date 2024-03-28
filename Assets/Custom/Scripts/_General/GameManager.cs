@@ -14,8 +14,23 @@ public class GameManager : MonoBehaviour
     private MovementController player;
     private int completedCount;
 
-    private int currentRun;
+    public int currentRun;
 
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<GameManager>();
+            }
+            return instance;
+        }
+    }
+
+    private static GameManager instance;
+    
+    
     private void OnObjectiveCompleted(ObjectiveCompletedEvent _event)
     {
         completedCount++;

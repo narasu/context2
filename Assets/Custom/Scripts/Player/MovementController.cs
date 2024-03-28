@@ -11,6 +11,8 @@ public class MovementController : MonoBehaviour, ISlowable
     public float WalkSpeed, SneakSpeed, Friction, MinJumpHeight, MaxJumpHeight, JumpDuration, FallDuration;
     public TriggerCheck GroundCheck;
     public CapsuleCollider DetectCollider;
+    public GameObject YangXiaYu;
+    public GameObject YusufPasha;
     
     private Animator animator;
     private static readonly int a_IsWalking = Animator.StringToHash("IsWalking");
@@ -133,6 +135,20 @@ public class MovementController : MonoBehaviour, ISlowable
         inputActions.Player.Jump.performed += OnJump;
         inputActions.Player.Jump.canceled += OnJumpRelease;
         inputActions.Player.Crouch.performed += OnCrouch;
+
+        switch (GameManager.Instance.currentRun)
+        {
+            case 0:
+                YangXiaYu.SetActive(true);
+                animator = YangXiaYu.GetComponent<Animator>();
+                YusufPasha.SetActive(false);
+                break;
+            case 1:
+                YangXiaYu.SetActive(false);
+                YusufPasha.SetActive(true);
+                animator = YusufPasha.GetComponent<Animator>();
+                break;
+        }
         
         EventManager.Subscribe(typeof(ThrowStartEvent), throwStartEventHandler);
         EventManager.Subscribe(typeof(ThrowEndEvent), throwEndEventHandler);
