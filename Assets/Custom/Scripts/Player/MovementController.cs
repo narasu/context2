@@ -150,6 +150,8 @@ public class MovementController : MonoBehaviour, ISlowable
                 break;
         }
         
+        GetComponent<ThrowHandler>().enabled = true;
+        
         EventManager.Subscribe(typeof(ThrowStartEvent), throwStartEventHandler);
         EventManager.Subscribe(typeof(ThrowEndEvent), throwEndEventHandler);
     }
@@ -160,6 +162,8 @@ public class MovementController : MonoBehaviour, ISlowable
         inputActions.Player.Jump.performed -= OnJump;
         inputActions.Player.Jump.canceled -= OnJumpRelease;
         inputActions.Player.Crouch.performed -= OnCrouch;
+
+        GetComponent<ThrowHandler>().enabled = false;
         
         EventManager.Unsubscribe(typeof(ThrowStartEvent), throwStartEventHandler);
         EventManager.Unsubscribe(typeof(ThrowEndEvent), throwEndEventHandler);
