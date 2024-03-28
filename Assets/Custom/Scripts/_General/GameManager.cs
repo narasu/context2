@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     private Action<ObjectiveCompletedEvent> objectiveCompletedEventHandler;
     private Action<GameStartedEvent> gameStartedEventHandler;
     private Action<PlayerCaughtEvent> playerCaughtEventHandler;
-    private List<Objective> objectives = new();
+    public List<Objective> Objectives = new();
     private List<Guard> guards = new();
     private MovementController player;
     private int completedCount;
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     private void OnObjectiveCompleted(ObjectiveCompletedEvent _event)
     {
         completedCount++;
-        if (completedCount >= objectives.Count)
+        if (completedCount >= Objectives.Count)
         {
             //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             Debug.Log("Win!");
@@ -71,15 +71,21 @@ public class GameManager : MonoBehaviour
         objectiveCompletedEventHandler = OnObjectiveCompleted;
         playerCaughtEventHandler = OnPlayerCaught;
         gameStartedEventHandler = OnGameStarted;
-        objectives = new List<Objective>(FindObjectsOfType<Objective>());
+        Objectives = new List<Objective>(FindObjectsOfType<Objective>());
         guards = new List<Guard>(FindObjectsOfType<Guard>());
+        player = FindObjectOfType<MovementController>();
+    }
+
+    private void Start()
+    {
         foreach (var guard in guards)
         {
             guard.gameObject.SetActive(false);
         }
-        player = FindObjectOfType<MovementController>();
+        
         player.gameObject.SetActive(false);
     }
+
     private void OnEnable()
     {
         EventManager.Subscribe(typeof(ObjectiveCompletedEvent), objectiveCompletedEventHandler);

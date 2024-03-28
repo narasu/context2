@@ -33,7 +33,7 @@ public class BTStopOnPath : BTBaseNode
 
     protected override TaskStatus Run()
     {
-        agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, patrolNodes[patrolNodeIndex].Rotation, Time.deltaTime * 5.0f);
+        //agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, patrolNodes[patrolNodeIndex].Rotation, Time.deltaTime * 5.0f);
         t += Time.fixedDeltaTime;
         if (t >= waitTime)
         {

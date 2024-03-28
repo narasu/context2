@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class EndAnimation : MonoBehaviour
 {
-   
+
+    public float time = 10.4f;
     void Start()
      {
-         Invoke("LoadNextSceneFunction", 10.4f);
+         Invoke("LoadNextSceneFunction", time);
        
         
     }

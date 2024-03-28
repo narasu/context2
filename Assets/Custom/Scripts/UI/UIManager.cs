@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject Disclaimer;
+    public GameObject ButtonMapping;
     public GameObject Tutorial;
     public GameObject[] IDCards;
     public GameObject ObjectiveCounter;
@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     private GameInputActions inputActions;
     private GameObject[] sequence;
     private int currentScreen = 0;
+    private int currentRun;
     private bool gameStarted = false;
     private bool caught = false;
     private Action<ObjectiveCompletedEvent> objectiveCompletedEventHandler;
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour
         inputActions.Player.Jump.performed += Next;
         sequence = new[]
         {
+            ButtonMapping,
             Tutorial,
             IDCards[0]
         };
@@ -53,8 +55,9 @@ public class UIManager : MonoBehaviour
     {
         caught = true;
         gameStarted = false;
-        CaughtScreens[GameManager.Instance.currentRun].SetActive(true);
+        CaughtScreens[currentRun].SetActive(true);
         ObjectiveCounter.SetActive(false);
+        currentRun++;
     }
     
     private void Next(InputAction.CallbackContext _ctx)
@@ -85,9 +88,9 @@ public class UIManager : MonoBehaviour
             // ObjectiveCounter.SetActive(true);
             // EventManager.Invoke(new GameStartedEvent());
             CaughtScreens[0].SetActive(false);
-            currentScreen = 1;
-            sequence[1] = IDCards[1];
-            sequence[1].SetActive(true);
+            currentScreen = 2;
+            sequence[2] = IDCards[1];
+            sequence[2].SetActive(true);
             caught = false;
         }
     }

@@ -24,6 +24,9 @@ public class Guard : MonoBehaviour, ISlowable
     private Animator animator;
     private ViewCone viewCone;
     private Blackboard blackboard = new();
+    
+    private int a_IsWalking = Animator.StringToHash("IsWalking");
+    private int a_IsRunning = Animator.StringToHash("IsRunning");
 
     private Vector3 startPosition;
     private Quaternion startRotation;
@@ -37,10 +40,7 @@ public class Guard : MonoBehaviour, ISlowable
         startRotation = transform.rotation;
         InitializePath();
         
-    }
-
-    private void Start()
-    {
+        
         blackboard.SetVariable(Strings.Agent, agent);
         blackboard.SetVariable(Strings.Animator, animator);
         blackboard.SetVariable(Strings.PatrolNodes, patrolNodes);
@@ -63,7 +63,7 @@ public class Guard : MonoBehaviour, ISlowable
         var path = new BTSequence("Path",
             new BTSetAgentState(blackboard, AgentState.PATROL),
             new BTGotoNextOnPath(blackboard), 
-            moveTo,
+            new BTAnimate(animator, a_IsWalking, moveTo),
             new BTStopOnPath(blackboard));
         
         var patrol = new BTParallel("Patrol", Policy.RequireAll, Policy.RequireOne,
@@ -76,7 +76,7 @@ public class Guard : MonoBehaviour, ISlowable
         var chase = new BTSelector("Chase Selector",
             new BTSequence("Chase",
                 new BTSetAgentState(blackboard, AgentState.CHASE),
-                moveTo,
+                new BTAnimate(animator, a_IsRunning, moveTo),
 
                 new BTTimeout(2.0f, TaskStatus.Failed, new BTGetStatus(blackboard, Strings.DetectionResult)))
         );
@@ -91,6 +91,11 @@ public class Guard : MonoBehaviour, ISlowable
             detect,
             detectionSelector
         );
+    }
+
+    private void Start()
+    {
+        
     }
 
     private void FixedUpdate()
@@ -133,6 +138,8 @@ public class Guard : MonoBehaviour, ISlowable
         blackboard.SetVariable(Strings.PatrolNodeIndex, 0);
         blackboard.SetVariable(Strings.Destination, startPosition);
         
+        animator.SetBool(a_IsWalking, false);
+        animator.SetBool(a_IsRunning, false);
         
         agent.ResetPath();
     }

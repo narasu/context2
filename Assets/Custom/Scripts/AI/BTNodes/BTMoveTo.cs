@@ -44,6 +44,7 @@ public class BTMoveTo : BTBaseNode
         
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
+            Debug.Log("invalid?");
             return TaskStatus.Failed;
         }
         
