@@ -1,11 +1,13 @@
 ﻿
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BTStopOnPath : BTBaseNode
 {
     private readonly Blackboard blackboard;
     private Transform viewTransform;
     private Animation anim;
+    private NavMeshAgent agent;
     private float waitTime;
     private PathNode[] patrolNodes;
     private int patrolNodeIndex;
@@ -17,7 +19,7 @@ public class BTStopOnPath : BTBaseNode
         viewTransform = _blackboard.GetVariable<Transform>(Strings.ViewTransform);
         anim = viewTransform.GetComponent<Animation>();
         patrolNodes = _blackboard.GetVariable<PathNode[]>(Strings.PatrolNodes);
-        
+        agent = _blackboard.GetVariable<NavMeshAgent>(Strings.Agent);
     }
 
     protected override void OnEnter(bool _debug)
@@ -31,6 +33,7 @@ public class BTStopOnPath : BTBaseNode
 
     protected override TaskStatus Run()
     {
+        agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, patrolNodes[patrolNodeIndex].Rotation, Time.deltaTime * 5.0f);
         t += Time.fixedDeltaTime;
         if (t >= waitTime)
         {

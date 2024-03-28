@@ -7,18 +7,27 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     [SerializeField] private AudioSource soundObject;
     public AudioClip Music;
-
+    public AudioClip Arrest;
+    private AudioSource audioSource;
+    
     private void Awake()
     {
-       if (instance == null)
+        if (instance == null)
         {
             instance = this;
         }
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void PlayMusic()
     {
-        PlaySoundClip(Music, transform, 1f);
+        audioSource.Play();
+    }
+
+    public void StopMusic()
+    {
+        audioSource.Stop();
     }
 
     public void PlaySoundClip(AudioClip audioClip,Transform spawnTransform, float volume)

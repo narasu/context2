@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerCaught(PlayerCaughtEvent _event)
     {
+        SoundManager.instance.StopMusic();
+        SoundManager.instance.PlaySoundClip(SoundManager.instance.Arrest, transform, 1.0f);
         player.Reset();
         player.gameObject.SetActive(false);
         foreach (var guard in guards)
